@@ -1,0 +1,103 @@
+while(..)
+{
+    float t = glfwGetTime();
+    float dt = t -lastt;
+    
+     // Kamerasteuerung
+     Model = ... Kamera...
+     Save = Model;
+    
+      Model = Save;
+      Model = ....
+      sendMVP();
+      drawSpielfeld();
+     
+      // fuer geschoss 
+      xg = v * dt;
+       Model = Save;
+      Model = glm::translate(Model, glm::vec3(xg, yg, zg);
+      sendMVP();
+      drawGeschoss();
+      
+      for (float x = xpos; x < ...; x+= ...)
+      {
+          if (visible)
+          {
+            Model = Save;    
+            Model =   glm::translate(Model, glm::vec3(x, 1, 1);
+            sendMVP();      
+            drawObject(); 
+        }   
+    
+       }
+    
+    
+       lastt = t;  
+    
+}
+
+// 3DObjekt als Klasse/Object
+#include "Obj3D.hpp"
+// Obj3D cubeObj("cube.obj") ;
+Obj3D* cubeObj = NULL;
+___________________________
+void drawGround(Obj3D* obj3D)
+{
+    glm::mat4 Save = Model;
+    glBindTexture(GL_TEXTURE_2D, TextureRasen);
+    Model = glm::translate(Model, glm::vec3(0, -1, 0));
+    Model = glm::scale(Model, glm::vec3(5, 0.01, 5));
+    sendMVP();
+    obj3D -> display();
+    Model = Save;
+}
+
+
+
+void drawBlock(float xKoor, float yKoor, float zKoor)
+{
+    glm::mat4 Save = Model;
+    glBindTexture(GL_TEXTURE_2D, TextureMauer);
+    Model = glm::translate(Model, glm::vec3(xKoor, yKoor - 0.1, zKoor));
+    Model = glm::scale(Model, glm::vec3(0.1, 0.2, 0.5));
+    sendMVP();
+    cubeObj ->display();
+    Model = Save;
+}
+.....
+main()
+
+
+  
+
+___________
+
+
+
+main ()
+{
+    ....
+    glewInit();
+    
+
+    ...
+    __________________
+ // load the Cube-Objects
+    cubeObj = new Obj3D("podest.obj");
+
+
+    // Alles ist vorbereitet, jetzt kann die Eventloop laufen...
+    while (!glfwWindowShouldClose(window))
+    ______________
+    
+
+    
+    while (...)
+    {
+
+        drawGround(cubeObj);
+    }
+    
+}
+   
+   
