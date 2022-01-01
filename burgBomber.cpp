@@ -25,6 +25,8 @@ GLuint TextureMauer;
 GLuint TextureMauer2;
 GLuint TextureMauer3;
 GLuint TextureBergMitSee;
+GLuint TextureAuge;
+GLuint TextureComicBaum;
 
 
 
@@ -69,11 +71,18 @@ Obj3D* kanneObject = NULL;
 
 
 // globala variablen
+float flugobjektX;
+float flugobjektY;
+float flugobjektZ;
+
+
 float winkel = 0;
 void addWinkel(float w) {
 	winkel = winkel + w;
 }
 // globala variablen
+float kanneLinksYrotate = 90;
+float kanneRechtsYrotate = 90;
 
 void reduceWinkel(float w) {
 	winkel = winkel - w;
@@ -145,6 +154,8 @@ float roboWinkel = 1;
 float rotate3 = 1;
 
 
+
+
 // Callback-Mechanismen gibt es in unterschiedlicher Form in allen möglichen Programmiersprachen,
 // sehr häufig in interaktiven graphischen Anwendungen. In der Programmiersprache C werden dazu 
 // Funktionspointer verwendet. Man übergibt einer aufgerufenen Funktion einer Bibliothek einen
@@ -183,6 +194,18 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		break;
 	case GLFW_KEY_Q:
 		zWert = zWert + 1;
+		break;
+	case GLFW_KEY_E:
+		kanneLinksYrotate = kanneLinksYrotate - 5;
+		break;
+	case GLFW_KEY_R:
+		kanneLinksYrotate = kanneLinksYrotate + 5;
+		break;
+	case GLFW_KEY_Y:
+		kanneRechtsYrotate = kanneRechtsYrotate - 5;
+		break;
+	case GLFW_KEY_U:
+		kanneRechtsYrotate = kanneRechtsYrotate + 5;
 		break;
 	case GLFW_KEY_X:
 		xWert = xWert - 1;
@@ -322,14 +345,14 @@ void drawZylinder(Obj3D* obj3D)
 { // linke seite 
 	glm::mat4 Save = Model;
 	glBindTexture(GL_TEXTURE_2D, TextureMauer3);
-	Model = glm::translate(Model, glm::vec3(4.25, -0.45, 0));
+	Model = glm::translate(Model, glm::vec3(4.0, -0.45, 0));
 	Model = glm::scale(Model, glm::vec3(0.5, 1, 1));
 	sendMVP();
 	obj3D->display();
 	Model = Save;
 // rechte Seite	
 	
-	Model = glm::translate(Model, glm::vec3(-4.25, -0.45, 0));
+	Model = glm::translate(Model, glm::vec3(-4.0, -0.45, 0));
 	Model = glm::scale(Model, glm::vec3(0.5, 1, 1));
 	sendMVP();
 	obj3D->display();
@@ -368,20 +391,22 @@ void drawBlock(Obj3D* opj3D, float scX, float scY, float scZ, float trX, float t
 {
 	glm::mat4 Save = Model;
 	glBindTexture(GL_TEXTURE_2D, TextureMauer);
-	Model = glm::translate(Model, glm::vec3(trX, trY - 0.1, trZ));
+	Model = glm::translate(Model, glm::vec3(trX, trY , trZ));
 	Model = glm::scale(Model, glm::vec3(scX, scY, scZ));
 	sendMVP();
 	opj3D  -> display();
 	Model = Save;
 }
-void drawTeeKanne() {
+
+void drawTeeKanne(Obj3D* obj3D, float trX, float trY, float trZ, float rotateY) {
 	glm::mat4 Save = Model;
-	glBindTexture(GL_TEXTURE_2D, TextureMauer);
-	Model = glm::rotate(Model, xWert, glm::vec3(1, 0, 0));
-	Model = glm::translate(Model, glm::vec3(4.25, -0.45, 0));
-	Model = glm::scale(Model, glm::vec3(1/100, 1 / 100, 1 / 100));
+	glBindTexture(GL_TEXTURE_2D, TextureAuge);
+	Model = glm::translate(Model, glm::vec3(trX, trY, trZ));
+	Model = glm::rotate(Model, rotateY, glm::vec3(0, 1, 0));	 //y-achse
+	Model = glm::rotate(Model, -90.0f, glm::vec3(1, 0, 0));   // x-Achse
+	Model = glm::scale(Model, glm::vec3(1.0 / 1300.0, 1.0 / 1300.0, 1.0 / 500.0));
 	sendMVP();
-	kanneObject->display();
+	obj3D -> display();
 	Model = Save;
 }
 
@@ -394,9 +419,7 @@ void drawSeg(float h)
 	drawSphere(10, 10);
 	Model = Save;
 }
-//void APIENTRY openGLDebugCallBack(GLenum source, GLenum type, /*GLunit id,*/ GLenum serverity, GLsizei length, const GLchar*, void* userParam) {
-//	std::cout << "[OpenGL Error] " << message << std::endl;
-//}
+
 
 // Einstiegspunkt für C- und C++-Programme (Funktion), Konsolenprogramme könnte hier auch Parameter erwarten
 int main(void)
@@ -525,6 +548,8 @@ int main(void)
 	TextureMauer2 = loadBMP_custom("Felsmauer6Groß.bmp");
 	TextureMauer3 = loadBMP_custom("Felsmauer7.bmp");
 	TextureBergMitSee = loadBMP_custom("Berge.bmp");
+	TextureAuge = loadBMP_custom("auge.bmp");
+	TextureComicBaum = loadBMP_custom("comicBaum.bmp");
 
 	//GLuint TextureMandrill = loadBMP_custom("mandrill.bmp");
 
@@ -535,6 +560,66 @@ int main(void)
 	mauerObj = new Obj3D("FelsmauerCube.obj");
 	zylinderObj = new Obj3D("zylinder.obj");
 	turmObject = new Obj3D("turm.obj");
+
+	// Array Fuer scale "0-2" Mauerposition(translate) "3-5" und  "visible =1 an [x][6]"	// scale laengs: (0.1, 0.2, 0.5)  // scale quer: (0.5, 0.2, 0.1)
+	float mauerArray[][7] = {
+		{0.1, 0.2, 0.5,   3, -0.8, -2,   1},			// 1-te Schicht laengs - links
+		{0.1, 0.2, 0.5,   3, -0.8, -1,   1},
+		{0.1, 0.2, 0.5,   3, -0.8,  0,   1},
+		{0.1, 0.2, 0.5,   3, -0.8,  1,   1},
+		{0.1, 0.2, 0.5,   3, -0.8,  2,   1},
+		{0.1, 0.2, 0.5,   3, -0.4, -2,   1},			// 2-te Schicht laengs - links
+		{0.1, 0.2, 0.5,   3, -0.4, -1,   1},
+		{0.1, 0.2, 0.5,   3, -0.4,  0,   1},
+		{0.1, 0.2, 0.5,   3, -0.4,  1,   1},
+		{0.1, 0.2, 0.5,   3, -0.4,  2,   1},
+		{0.1, 0.2, 0.5,   3, -0.0, -2,   1},			// 3-te Schicht laengs - links
+		{0.1, 0.2, 0.5,   3, -0.0, -1,   1},
+		{0.1, 0.2, 0.5,   3, -0.0,  0,   1},
+		{0.1, 0.2, 0.5,   3, -0.0,  1,   1},
+		{0.1, 0.2, 0.5,   3, -0.0,  2,   1},
+		{0.5, 0.2, 0.1,	 3.5, -0.8, -2.4,  1},			// 1-3te Schicht quer Links unten rechte Hälfte
+		{0.5, 0.2, 0.1,	 3.5, -0.4, -2.4,  1},
+		{0.5, 0.2, 0.1,	 3.5, -0.0, -2.4,  1},
+		{0.5, 0.2, 0.1,	 4, -0.8, -2.4,  1},			// 1-3te Schicht quer Links unten linke Hälfte
+		{0.5, 0.2, 0.1,	 4, -0.4, -2.4,  1},
+		{0.5, 0.2, 0.1,	 4, -0.0, -2.4,  1},
+		{0.5, 0.2, 0.1,	 3.5, -0.8, 2.4,  1},			// 1-3te Schicht quer Links oben rechte Hälfte
+		{0.5, 0.2, 0.1,	 3.5, -0.4, 2.4,  1},
+		{0.5, 0.2, 0.1,	 3.5, -0.0, 2.4,  1},
+		{0.5, 0.2, 0.1,	 4, -0.8, 2.4,  1},				// 1-3te Schicht quer Links oben linke Hälfte
+		{0.5, 0.2, 0.1,	 4, -0.4, 2.4,  1},
+		{0.5, 0.2, 0.1,	 4, -0.0, 2.4,  1},
+	};
+	float mauerArrayRechts[][7] = {
+			{0.1, 0.2, 0.5,   -3, -0.8, -2,   1},			// 1-te Schicht laengs - rechts
+			{0.1, 0.2, 0.5,   -3, -0.8, -1,   1},
+			{0.1, 0.2, 0.5,   -3, -0.8,  0,   1},
+			{0.1, 0.2, 0.5,   -3, -0.8,  1,   1},
+			{0.1, 0.2, 0.5,   -3, -0.8,  2,   1},
+			{0.1, 0.2, 0.5,   -3, -0.4, -2,   1},			// 2-te Schicht laengs - rechts
+			{0.1, 0.2, 0.5,   -3, -0.4, -1,   1},
+			{0.1, 0.2, 0.5,   -3, -0.4,  0,   1},
+			{0.1, 0.2, 0.5,   -3, -0.4,  1,   1},
+			{0.1, 0.2, 0.5,   -3, -0.4,  2,   1},
+			{0.1, 0.2, 0.5,   -3, -0.0, -2,   1},			// 3-te Schicht laengs - rechts
+			{0.1, 0.2, 0.5,   -3, -0.0, -1,   1},
+			{0.1, 0.2, 0.5,   -3, -0.0,  0,   1},
+			{0.1, 0.2, 0.5,   -3, -0.0,  1,   1},
+			{0.1, 0.2, 0.5,   -3, -0.0,  2,   1},
+			{0.5, 0.2, 0.1,	 -3.5, -0.8, -2.4,  1},			// 1-3te Schicht quer rechts unten rechte Hälfte
+			{0.5, 0.2, 0.1,	 -3.5, -0.4, -2.4,  1},
+			{0.5, 0.2, 0.1,	 -3.5, -0.0, -2.4,  1},
+			{0.5, 0.2, 0.1,	 -4, -0.8, -2.4,  1},			// 1-3te Schicht quer rechts unten linke Hälfte
+			{0.5, 0.2, 0.1,	 -4, -0.4, -2.4,  1},
+			{0.5, 0.2, 0.1,	 -4, -0.0, -2.4,  1},
+			{0.5, 0.2, 0.1,	 -3.5, -0.8, 2.4,  1},			// 1-3te Schicht quer rechts oben rechte Hälfte
+			{0.5, 0.2, 0.1,	 -3.5, -0.4, 2.4,  1},
+			{0.5, 0.2, 0.1,	 -3.5, -0.0, 2.4,  1},
+			{0.5, 0.2, 0.1,	 -4, -0.8, 2.4,  1},				// 1-3te Schicht quer rechts oben linke Hälfte
+			{0.5, 0.2, 0.1,	 -4, -0.4, 2.4,  1},
+			{0.5, 0.2, 0.1,	 -4, -0.0, 2.4,  1},
+	};
 
 
 	// Alles ist vorbereitet, jetzt kann die Eventloop laufen...
@@ -599,78 +684,23 @@ int main(void)
 		/* drawCube();
 
 		 sendMVP();*/
-
-		 // erstellern der Teekanne
-		drawTeeKanne();
 		Model = Save;
+		 // erstellern der Teekanne
+		
+		
 
 		// Grundfläche erstellen
 		drawGround(CubeFullTexure360);
 		drawBackRound(CubeFullTexure360);  
 		drawZylinder(zylinderObj); 
-		Model = Save;
-		sendMVP();
+		drawTeeKanne(kanneObject, 4.0, 0.75, 0, kanneLinksYrotate);
+		drawTeeKanne(kanneObject, -4.0, 0.75, 0, kanneRechtsYrotate);
+		
+		//Model = Save;
+		//sendMVP();
 
 		Model = Save;
-		// Array Fuer scale "0-2" Mauerposition(translate) "3-5" und  "visible =1 an [x][6]"	// scale laengs: (0.1, 0.2, 0.5)  // scale quer: (0.5, 0.2, 0.1)
-		float mauerArray[][7] = {	
-			{0.1, 0.2, 0.5,   3, -0.8, -2,   1},			// 1-te Schicht laengs - links
-			{0.1, 0.2, 0.5,   3, -0.8, -1,   1},	
-			{0.1, 0.2, 0.5,   3, -0.8,  0,   1},
-			{0.1, 0.2, 0.5,   3, -0.8,  1,   1},
-			{0.1, 0.2, 0.5,   3, -0.8,  2,   1},
-			{0.1, 0.2, 0.5,   3, -0.4, -2,   1},			// 2-te Schicht laengs - links
-			{0.1, 0.2, 0.5,   3, -0.4, -1,   1},
-			{0.1, 0.2, 0.5,   3, -0.4,  0,   1},
-			{0.1, 0.2, 0.5,   3, -0.4,  1,   1},
-			{0.1, 0.2, 0.5,   3, -0.4,  2,   1},
-			{0.1, 0.2, 0.5,   3, -0.0, -2,   1},			// 3-te Schicht laengs - links
-			{0.1, 0.2, 0.5,   3, -0.0, -1,   1},
-			{0.1, 0.2, 0.5,   3, -0.0,  0,   1},
-			{0.1, 0.2, 0.5,   3, -0.0,  1,   1},
-			{0.1, 0.2, 0.5,   3, -0.0,  2,   1},
-			{0.5, 0.2, 0.1,	 3.5, -0.8, -2.4,  1},			// 1-3te Schicht quer Links unten rechte Hälfte
-			{0.5, 0.2, 0.1,	 3.5, -0.4, -2.4,  1},
-			{0.5, 0.2, 0.1,	 3.5, -0.0, -2.4,  1},
-			{0.5, 0.2, 0.1,	 4, -0.8, -2.4,  1},			// 1-3te Schicht quer Links unten linke Hälfte
-			{0.5, 0.2, 0.1,	 4, -0.4, -2.4,  1},
-			{0.5, 0.2, 0.1,	 4, -0.0, -2.4,  1},
-			{0.5, 0.2, 0.1,	 3.5, -0.8, 2.4,  1},			// 1-3te Schicht quer Links oben rechte Hälfte
-			{0.5, 0.2, 0.1,	 3.5, -0.4, 2.4,  1},
-			{0.5, 0.2, 0.1,	 3.5, -0.0, 2.4,  1},
-			{0.5, 0.2, 0.1,	 4, -0.8, 2.4,  1},				// 1-3te Schicht quer Links oben linke Hälfte
-			{0.5, 0.2, 0.1,	 4, -0.4, 2.4,  1},
-			{0.5, 0.2, 0.1,	 4, -0.0, 2.4,  1},
-		};
-		float mauerArrayRechts[][7]={
-			{0.1, 0.2, 0.5,   -3, -0.8, -2,   1},			// 1-te Schicht laengs - rechts
-			{0.1, 0.2, 0.5,   -3, -0.8, -1,   1},
-			{0.1, 0.2, 0.5,   -3, -0.8,  0,   1},
-			{0.1, 0.2, 0.5,   -3, -0.8,  1,   1},
-			{0.1, 0.2, 0.5,   -3, -0.8,  2,   1},
-			{0.1, 0.2, 0.5,   -3, -0.4, -2,   1},			// 2-te Schicht laengs - rechts
-			{0.1, 0.2, 0.5,   -3, -0.4, -1,   1},
-			{0.1, 0.2, 0.5,   -3, -0.4,  0,   1},
-			{0.1, 0.2, 0.5,   -3, -0.4,  1,   1},
-			{0.1, 0.2, 0.5,   -3, -0.4,  2,   1},
-			{0.1, 0.2, 0.5,   -3, -0.0, -2,   1},			// 3-te Schicht laengs - rechts
-			{0.1, 0.2, 0.5,   -3, -0.0, -1,   1},
-			{0.1, 0.2, 0.5,   -3, -0.0,  0,   1},
-			{0.1, 0.2, 0.5,   -3, -0.0,  1,   1},
-			{0.1, 0.2, 0.5,   -3, -0.0,  2,   1},
-			{0.5, 0.2, 0.1,	 -3.5, -0.8, -2.4,  1},			// 1-3te Schicht quer rechts unten rechte Hälfte
-			{0.5, 0.2, 0.1,	 -3.5, -0.4, -2.4,  1},
-			{0.5, 0.2, 0.1,	 -3.5, -0.0, -2.4,  1},
-			{0.5, 0.2, 0.1,	 -4, -0.8, -2.4,  1},			// 1-3te Schicht quer rechts unten linke Hälfte
-			{0.5, 0.2, 0.1,	 -4, -0.4, -2.4,  1},
-			{0.5, 0.2, 0.1,	 -4, -0.0, -2.4,  1},
-			{0.5, 0.2, 0.1,	 -3.5, -0.8, 2.4,  1},			// 1-3te Schicht quer rechts oben rechte Hälfte
-			{0.5, 0.2, 0.1,	 -3.5, -0.4, 2.4,  1},
-			{0.5, 0.2, 0.1,	 -3.5, -0.0, 2.4,  1},
-			{0.5, 0.2, 0.1,	 -4, -0.8, 2.4,  1},				// 1-3te Schicht quer rechts oben linke Hälfte
-			{0.5, 0.2, 0.1,	 -4, -0.4, 2.4,  1},
-			{0.5, 0.2, 0.1,	 -4, -0.0, 2.4,  1},
-		};
+		
 		
 		// mauer mit block Erstellen links ;
 		for (int x = 0 ; x < sizeof mauerArray[0]; x += 1 ){
@@ -687,8 +717,11 @@ int main(void)
 		}
 
 		//Tuerme erstellen
-		float turmArray[][7] = { {0.2, 0.3, 0.2,-3, 0, -2.5, 1}, {0.2, 0.3, 0.2, -3, -0, 2.5, 1},	{0.2, 0.3, 0.2, 3, 0, -2.5, 1},	 {0.2, 0.3, 0.2, 3, -0, 2.5, 1},};
-		for (int x = 0; x < sizeof turmArray[0]; x += 1) {
+		float turmArray[][7] = { {0.2, 0.3, 0.2,-3, 0, -2.5, 1}, 
+								{0.2, 0.3, 0.2, -3, -0, 2.5, 1},	
+								{0.2, 0.3, 0.2, 3, 0, -2.5, 1},	 
+								{0.2, 0.3, 0.2, 3, -0, 2.5, 1}};
+		for (int x = 0; x < sizeof turmArray[0][0]; x += 1) {
 			if (turmArray[x][6] == 1) {
 				drawBlock(turmObject, turmArray[x][0], turmArray[x][1], turmArray[x][2], turmArray[x][3], turmArray[x][4], turmArray[x][5]);
 			}
@@ -709,16 +742,34 @@ int main(void)
 		drawSeg(1.2f);
 		Model = glm::translate(Model, glm::vec3(0, 0, 1.2));
 		Model = glm::rotate(Model, trim, glm::vec3(1, 0, 0));
+		
 		drawSeg(0.8f);
+		
 		//drawSphere(10, 10);
+		//drawBlock(zylinderObj);
+
+
 
 		// Licht berechnen:
-
+		
 		glm::vec4 lightPos = Model * glm::vec4(0.0f, 0.0f, 0.8f, 1.0f);
 		glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPos.x, lightPos.y,lightPos.z);
+		// Übergabe der Koordinaten
+		flugobjektX = lightPos.x;
+		flugobjektY = lightPos.y;
+		flugobjektZ = lightPos.z;
+		
+		//Löschen der Visible  
+		/*for (int x = 0; x < sizeof mauerArray[0]; x += 1) {
+			std::cout << flugobjektX;
+			if (((mauerArray[x][3] >= flugobjektX + 0.1) || (mauerArray[x][3] <= flugobjektX - 0.1)) &&
+				((mauerArray[x][4] >= flugobjektY + 0.1) || (mauerArray[x][4] <= flugobjektY - 0.1)) &&
+				((mauerArray[x][5] >= flugobjektZ + 0.1) || (mauerArray[x][5] <= flugobjektZ - 0.1))) {
+				mauerArray[x][6] = 0;
+			};
 
-
-		// Bildende. 
+		};*/
+				// Bildende. 
 		// Bilder werden in den Bildspeicher gezeichnet (so schnell wie es geht.). 
 		// Der Bildspeicher wird mit der eingestellten Bildwiederholfrequenz (also z. B. 60Hz)
 		// ausgelesen und auf dem Bildschirm dargestellt. Da beide Frequenzen nicht übereinstimmen, würde
@@ -758,4 +809,5 @@ int main(void)
 
 	return 0; // Integer zurückgeben, weil main so definiert ist
 }
+
 
