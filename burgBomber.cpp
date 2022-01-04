@@ -421,6 +421,20 @@ void drawSeg(float h)
 }
 
 
+void eraseVisibility(float mauerArray[][7]) {
+	for (int x = 0; x < sizeof mauerArray[0]; x += 1) {
+		std::cout << "  flugobjektX: " << flugobjektX;
+		std::cout << "  flugobjektY: " << flugobjektY;
+		std::cout << "  flugobjektZ: " << flugobjektZ;
+		if (((mauerArray[x][3] <= flugobjektX + 0.25) && (mauerArray[x][3] >= flugobjektX - 0.25)) &&
+			((mauerArray[x][4] <= flugobjektY + 0.2) && (mauerArray[x][4] >= flugobjektY - 0.2)) &&
+			((mauerArray[x][5] <= flugobjektZ + 0.5) && (mauerArray[x][5] >= flugobjektZ - 0.5))) {
+			mauerArray[x][6] = 0;
+		};
+
+	};
+};
+
 // Einstiegspunkt für C- und C++-Programme (Funktion), Konsolenprogramme könnte hier auch Parameter erwarten
 int main(void)
 {
@@ -760,15 +774,18 @@ int main(void)
 		flugobjektZ = lightPos.z;
 		
 		//Löschen der Visible  
-		/*for (int x = 0; x < sizeof mauerArray[0]; x += 1) {
-			std::cout << flugobjektX;
-			if (((mauerArray[x][3] >= flugobjektX + 0.1) || (mauerArray[x][3] <= flugobjektX - 0.1)) &&
-				((mauerArray[x][4] >= flugobjektY + 0.1) || (mauerArray[x][4] <= flugobjektY - 0.1)) &&
-				((mauerArray[x][5] >= flugobjektZ + 0.1) || (mauerArray[x][5] <= flugobjektZ - 0.1))) {
-				mauerArray[x][6] = 0;
-			};
+			for (int x = 0; x < sizeof mauerArray[0]; x += 1) {
+				std::cout << "  flugobjektX: " << flugobjektX;
+				std::cout << "  flugobjektY: " << flugobjektY;
+				std::cout << "  flugobjektZ: " << flugobjektZ;
+				if (((mauerArray[x][3] <= flugobjektX + 0.25) && (mauerArray[x][3] >= flugobjektX - 0.25)) &&
+					((mauerArray[x][4] <= flugobjektY + 0.2) && (mauerArray[x][4] >= flugobjektY - 0.2)) &&
+					((mauerArray[x][5] <= flugobjektZ + 0.5) && (mauerArray[x][5] >= flugobjektZ - 0.5))) {
+					mauerArray[x][6] = 0;
+				};
 
-		};*/
+			};
+		
 				// Bildende. 
 		// Bilder werden in den Bildspeicher gezeichnet (so schnell wie es geht.). 
 		// Der Bildspeicher wird mit der eingestellten Bildwiederholfrequenz (also z. B. 60Hz)
