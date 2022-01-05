@@ -372,7 +372,7 @@ void drawBackRound(Obj3D* obj)
 
 	//rechts	
 	glBindTexture(GL_TEXTURE_2D, TextureBergMitSee);
-	Model = glm::translate(Model, glm::vec3(-4.8, 4.5, 0));
+	Model = glm::translate(Model, glm::vec3(-5.1, 4.5, -0.50));
 	Model = glm::scale(Model, glm::vec3(0.01, 3, 5.5));
 	sendMVP();
 	obj->display();
