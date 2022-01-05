@@ -320,25 +320,17 @@ void drawGround(Obj3D* obj3D)
 	obj3D->display();
 	
 	//steine Im Boden
-	float BodenSteineArray1[][2] = { {5, -9}, {9, -11},{ -7, 11}, {-10, 7}, {-3.5,-6.25}, {-2.5,-6.5}, {-0 ,-4},  {-8.6, 4.7 }	}; 
-	float BodenSteineArray2[][2] = { { 7.4,-7.4 }, { -4.5, 6.5 }, { 2, 2.6 }, { -7.5, -11.5 }, { -4,-2 }, { -8, -5 }, { 5.5, 7 }, { 1.5 ,5.5 } };
+	float BodenSteineArray1[][2] = { {-12,0},{12,-2}, {-4, 9.5}, {9, 3},{ -8, 9}, {-6, 5.5}, {5, -9}, {9, -11},{ 7, 11}, {-10, 7}, {-3.5,-3.25}, {-2.5,-6.5},{2, 0}, {2.7, 6.3}, {-0 ,-4},  {-8.6, 4.7 }, { 7.4,-7.4 }, { -5.5, 6.5 }, { 0, 3.6 }, { -7.5, -11.5 }, { -4,-2 }, { -8, -5 }, { 5.5, 7 }, { 1.5 , 8.5 } };
 	glBindTexture(GL_TEXTURE_2D, TextureMauer);
 	
-	for (int x = 0; x < sizeof BodenSteineArray1[0]; x += 1) {
+	for (int x = 0; x < sizeof(BodenSteineArray1) / sizeof(BodenSteineArray1[0]); x += 1) {
 		Model = Save;
 		Model = glm::scale(Model, glm::vec3(0.2, 0.2, 0.4));
 		Model = glm::translate(Model, glm::vec3(BodenSteineArray1[x][0], -5.9 , BodenSteineArray1[x][1]));
 		sendMVP();
 		mauerObj->display();
 	};
-	for (int x = 0; x < sizeof BodenSteineArray2[0]; x += 1) {
-		Model = Save;
-		Model = glm::scale(Model, glm::vec3(0.3, 0.2, 0.3));
-		Model = glm::translate(Model, glm::vec3(BodenSteineArray2[x][0], -5.85 , BodenSteineArray2[x][1]));
-		sendMVP();
-		mauerObj->display();
-	};
-
+	
 	Model = Save;
 }
 void drawZylinder(Obj3D* obj3D)
@@ -423,9 +415,9 @@ void drawSeg(float h)
 
 void eraseVisibility(float array[][7], int num) {
 	for (int x = 0; x < num; x += 1) {
-		std::cout << "  flugobjektX: " << flugobjektX;
+		/*std::cout << "  flugobjektX: " << flugobjektX;
 		std::cout << "  flugobjektY: " << flugobjektY;
-		std::cout << "  flugobjektZ: " << flugobjektZ;
+		std::cout << "  flugobjektZ: " << flugobjektZ;*/
 		if (((array[x][3] <= flugobjektX + 0.25) && (array[x][3] >= flugobjektX - 0.25)) &&
 			((array[x][4] <= flugobjektY + 0.2) && (array[x][4] >= flugobjektY - 0.2)) &&
 			((array[x][5] <= flugobjektZ + 0.5) && (array[x][5] >= flugobjektZ - 0.5))) {
@@ -554,7 +546,6 @@ int main(void)
 		GL_FALSE, // Fixedpoint data normalisieren ?
 		0, // Eckpunkte direkt hintereinander gespeichert
 		(void*)0); // abweichender Datenanfang ? 
-
 	
 	GLuint normalbuffer; // Hier alles analog für Normalen in location == 2
 	glGenBuffers(1, &normalbuffer);
@@ -562,8 +553,6 @@ int main(void)
 	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(2); // siehe layout im vertex shader 
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-
 
 	// 
 	GLuint uvbuffer; // Hier alles analog für Texturkoordinaten in location == 1 (2 floats u und v!)
@@ -653,10 +642,13 @@ int main(void)
 	};
 	// Array fuer Tuerme
 	float turmArrayLinks[][7] = { {0.2, 0.3, 0.2, 3, -0.25, -2.5, 1},
-								  {0.2, 0.3, 0.2, 3, -0.25, 2.5, 1} };
+								  {0.2, 0.3, 0.2, 3, -0.25, 2.5, 1},
+								  {0.2, 0.4, 0.2, 4.5, -0.25, -2.5, 1},
+								  {0.2, 0.4, 0.2, 4.5, -0.25, 2.5, 1} };
 	float turmArrayRechts[][7] = {{0.2, 0.3, 0.2,-3, -0.25, -2.5, 1},
 								  {0.2, 0.3, 0.2, -3, -0.25, 2.5, 1},
-								 };
+								  {0.2, 0.4, 0.2, -4.5, -0.25, -2.5, 1},
+								  {0.2, 0.4, 0.2, -4.5, -0.25, 2.5, 1} };
 
 	// Alles ist vorbereitet, jetzt kann die Eventloop laufen...
 	while (!glfwWindowShouldClose(window))
@@ -721,8 +713,6 @@ int main(void)
 
 		 sendMVP();*/
 		Model = Save;
-		 // erstellern der Teekanne
-		
 		
 
 		// Grundfläche erstellen
@@ -739,14 +729,14 @@ int main(void)
 		
 		
 		// mauer mit block Erstellen links ;
-		drawWall(mauerArray, 27);
+		drawWall(mauerArray, sizeof(mauerArray) / sizeof(mauerArray[0]));
 		
 		// mauer mit block Erstellen rechts ;
-		drawWall(mauerArrayRechts, 27);
+		drawWall(mauerArrayRechts, sizeof(mauerArrayRechts) / sizeof(mauerArrayRechts[0]));
 
 		//Tuerme erstellen
-		drawTower(turmArrayLinks, 2);
-		drawTower(turmArrayRechts, 2);
+		drawTower(turmArrayLinks, sizeof(turmArrayLinks) / sizeof(turmArrayLinks[0]));
+		drawTower(turmArrayRechts, sizeof(turmArrayRechts) / sizeof(turmArrayRechts[0]));
 
 
 		/*glBindVertexArray(VertexArrayIDQuader);
@@ -770,7 +760,6 @@ int main(void)
 		//drawBlock(zylinderObj);
 
 
-
 		// Licht berechnen:
 		
 		glm::vec4 lightPos = Model * glm::vec4(0.0f, 0.0f, 0.8f, 1.0f);
@@ -782,10 +771,10 @@ int main(void)
 		
 		//Löschen der Visible  
 		Model = Save;
-		eraseVisibility(mauerArray, 27);
-		eraseVisibility(mauerArrayRechts, 27);
-		eraseVisibility(turmArrayRechts, 2);
-		eraseVisibility(turmArrayLinks, 2);
+		eraseVisibility(mauerArray, sizeof(mauerArray) / sizeof(mauerArray[0]));
+		eraseVisibility(mauerArrayRechts, sizeof(mauerArrayRechts) / sizeof(mauerArrayRechts[0]));
+		eraseVisibility(turmArrayRechts, sizeof(turmArrayRechts) / sizeof(turmArrayRechts[0]));
+		eraseVisibility(turmArrayLinks, sizeof(turmArrayLinks) / sizeof(turmArrayLinks[0]));
 
 		
 		
