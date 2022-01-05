@@ -421,19 +421,36 @@ void drawSeg(float h)
 }
 
 
-void eraseVisibility(float mauerArray[][7]) {
-	for (int x = 0; x < sizeof mauerArray[0]; x += 1) {
+void eraseVisibility(float array[][7], int num) {
+	for (int x = 0; x < num; x += 1) {
 		std::cout << "  flugobjektX: " << flugobjektX;
 		std::cout << "  flugobjektY: " << flugobjektY;
 		std::cout << "  flugobjektZ: " << flugobjektZ;
-		if (((mauerArray[x][3] <= flugobjektX + 0.25) && (mauerArray[x][3] >= flugobjektX - 0.25)) &&
-			((mauerArray[x][4] <= flugobjektY + 0.2) && (mauerArray[x][4] >= flugobjektY - 0.2)) &&
-			((mauerArray[x][5] <= flugobjektZ + 0.5) && (mauerArray[x][5] >= flugobjektZ - 0.5))) {
-			mauerArray[x][6] = 0;
+		if (((array[x][3] <= flugobjektX + 0.25) && (array[x][3] >= flugobjektX - 0.25)) &&
+			((array[x][4] <= flugobjektY + 0.2) && (array[x][4] >= flugobjektY - 0.2)) &&
+			((array[x][5] <= flugobjektZ + 0.5) && (array[x][5] >= flugobjektZ - 0.5))) {
+			if (array[x][6]) {
+				array[x][6] = 0;
+			}
 		};
-
 	};
 };
+
+void drawTower(float turmArray[][7], int num) {
+	for (int x = 0; x < num; x += 1) {
+		if (turmArray[x][6] == 1) {
+			drawBlock(turmObject, turmArray[x][0], turmArray[x][1], turmArray[x][2], turmArray[x][3], turmArray[x][4], turmArray[x][5]);
+		}
+	}
+}
+
+void drawWall(float  mauerArray[][7], int num) {
+	for (int x = 0; x < num; x += 1) {
+		if (mauerArray[x][6] == 1) {
+			drawBlock(mauerObj, mauerArray[x][0], mauerArray[x][1], mauerArray[x][2], mauerArray[x][3], mauerArray[x][4], mauerArray[x][5]);
+		}
+	}
+}
 
 // Einstiegspunkt für C- und C++-Programme (Funktion), Konsolenprogramme könnte hier auch Parameter erwarten
 int main(void)
@@ -451,7 +468,7 @@ int main(void)
 	// Öffnen eines Fensters für OpenGL, die letzten beiden Parameter sind hier unwichtig
 	// Diese Funktion darf erst aufgerufen werden, nachdem GLFW initialisiert wurde.
 	// (Ggf. glfwWindowHint vorher aufrufen, um erforderliche Resourcen festzulegen -> MacOSX)
-	GLFWwindow* window = glfwCreateWindow(1208, // Breite
+	GLFWwindow* window = glfwCreateWindow(1280, // Breite
 										  720,  // Hoehe
 										  "Castle Bombing", // Ueberschrift
 										  NULL,  // windowed mode
@@ -634,7 +651,12 @@ int main(void)
 			{0.5, 0.2, 0.1,	 -4, -0.4, 2.4,  1},
 			{0.5, 0.2, 0.1,	 -4, -0.0, 2.4,  1},
 	};
-
+	// Array fuer Tuerme
+	float turmArrayLinks[][7] = { {0.2, 0.3, 0.2, 3, -0.25, -2.5, 1},
+								  {0.2, 0.3, 0.2, 3, -0.25, 2.5, 1} };
+	float turmArrayRechts[][7] = {{0.2, 0.3, 0.2,-3, -0.25, -2.5, 1},
+								  {0.2, 0.3, 0.2, -3, -0.25, 2.5, 1},
+								 };
 
 	// Alles ist vorbereitet, jetzt kann die Eventloop laufen...
 	while (!glfwWindowShouldClose(window))
@@ -717,29 +739,14 @@ int main(void)
 		
 		
 		// mauer mit block Erstellen links ;
-		for (int x = 0 ; x < sizeof mauerArray[0]; x += 1 ){
-			if (mauerArray[x][6] == 1){
-				drawBlock(mauerObj, mauerArray[x][0], mauerArray[x][1], mauerArray[x][2], mauerArray[x][3], mauerArray[x][4], mauerArray[x][5]);
-			}
-		}
+		drawWall(mauerArray, 27);
 		
 		// mauer mit block Erstellen rechts ;
-		for (int x = 0; x < sizeof mauerArrayRechts[0]; x += 1) {
-			if (mauerArrayRechts[x][6] == 1) {
-				drawBlock(mauerObj, mauerArrayRechts[x][0], mauerArrayRechts[x][1], mauerArrayRechts[x][2], mauerArrayRechts[x][3], mauerArrayRechts[x][4], mauerArrayRechts[x][5]);
-			}
-		}
+		drawWall(mauerArrayRechts, 27);
 
 		//Tuerme erstellen
-		float turmArray[][7] = { {0.2, 0.3, 0.2,-3, 0, -2.5, 1}, 
-								{0.2, 0.3, 0.2, -3, -0, 2.5, 1},	
-								{0.2, 0.3, 0.2, 3, 0, -2.5, 1},	 
-								{0.2, 0.3, 0.2, 3, -0, 2.5, 1}};
-		for (int x = 0; x < sizeof turmArray[0][0]; x += 1) {
-			if (turmArray[x][6] == 1) {
-				drawBlock(turmObject, turmArray[x][0], turmArray[x][1], turmArray[x][2], turmArray[x][3], turmArray[x][4], turmArray[x][5]);
-			}
-		}
+		drawTower(turmArrayLinks, 2);
+		drawTower(turmArrayRechts, 2);
 
 
 		/*glBindVertexArray(VertexArrayIDQuader);
@@ -774,17 +781,13 @@ int main(void)
 		flugobjektZ = lightPos.z;
 		
 		//Löschen der Visible  
-			for (int x = 0; x < sizeof mauerArray[0]; x += 1) {
-				std::cout << "  flugobjektX: " << flugobjektX;
-				std::cout << "  flugobjektY: " << flugobjektY;
-				std::cout << "  flugobjektZ: " << flugobjektZ;
-				if (((mauerArray[x][3] <= flugobjektX + 0.25) && (mauerArray[x][3] >= flugobjektX - 0.25)) &&
-					((mauerArray[x][4] <= flugobjektY + 0.2) && (mauerArray[x][4] >= flugobjektY - 0.2)) &&
-					((mauerArray[x][5] <= flugobjektZ + 0.5) && (mauerArray[x][5] >= flugobjektZ - 0.5))) {
-					mauerArray[x][6] = 0;
-				};
+		Model = Save;
+		eraseVisibility(mauerArray, 27);
+		eraseVisibility(mauerArrayRechts, 27);
+		eraseVisibility(turmArrayRechts, 2);
+		eraseVisibility(turmArrayLinks, 2);
 
-			};
+		
 		
 				// Bildende. 
 		// Bilder werden in den Bildspeicher gezeichnet (so schnell wie es geht.). 
