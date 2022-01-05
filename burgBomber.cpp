@@ -444,6 +444,38 @@ void drawWall(float  mauerArray[][7], int num) {
 	}
 }
 
+//create multiple light sources
+void enlightenScene()
+{
+	glm::vec3 pointLightColors[] = {
+	glm::vec3(1.0f, 0.0f, 0.0f),
+	glm::vec3(0.0f, 1.0f, 0.0f),
+	glm::vec3(0.0f, 0.0f, 1.0f),
+	glm::vec3(0.4f, 0.4f, 0.4f)
+	};
+
+	glm::vec3 pointLightPositions[] = {
+	glm::vec3(0.0f, 5.0f, 0.0f),
+	glm::vec3(-5.0f, 5.0f, 0.0f),
+	glm::vec3(5.0f, 5.0f, 0.0f),
+	glm::vec3(0.0f, 0.0f, 0.0f)
+	};
+
+	// Dir light
+	glUniform3f(glGetUniformLocation(programID, "dirLight_position"), pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
+	glUniform3f(glGetUniformLocation(programID, "dirLight_ambient"),  pointLightColors[0].x, pointLightColors[0].y, pointLightColors[0].z);
+	glUniform3f(glGetUniformLocation(programID, "dirLight_diffuse"), pointLightColors[0].x, pointLightColors[0].y, pointLightColors[0].z);
+	// Point light 1
+	glUniform3f(glGetUniformLocation(programID, "pointLights1_position"), pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z);
+	glUniform3f(glGetUniformLocation(programID, "pointLights1_ambient"),  pointLightColors[1].x, pointLightColors[1].y, pointLightColors[1].z);
+	glUniform3f(glGetUniformLocation(programID, "pointLights1_diffuse"),  pointLightColors[1].x, pointLightColors[1].y, pointLightColors[1].z);
+	// Point light 2
+	glUniform3f(glGetUniformLocation(programID, "pointLights2_position"), pointLightPositions[2].x, pointLightPositions[2].y, 	pointLightPositions[2].z);
+	glUniform3f(glGetUniformLocation(programID, "pointLights2_ambient"),  pointLightColors[2].x, pointLightColors[2].y, pointLightColors[2].z); 
+	glUniform3f(glGetUniformLocation(programID, "pointLights2_diffuse"),  pointLightColors[2].x, pointLightColors[2].y, pointLightColors[2].z);
+}
+
+
 // Einstiegspunkt für C- und C++-Programme (Funktion), Konsolenprogramme könnte hier auch Parameter erwarten
 int main(void)
 {
@@ -761,13 +793,15 @@ int main(void)
 
 
 		// Licht berechnen:
-		
-		glm::vec4 lightPos = Model * glm::vec4(0.0f, 0.0f, 0.8f, 1.0f);
+		enlightenScene();
+
+
+		/*glm::vec4 lightPos = Model * glm::vec4(0.0f, 0.0f, 0.8f, 1.0f);
 		glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPos.x, lightPos.y,lightPos.z);
-		// Übergabe der Koordinaten
-		flugobjektX = lightPos.x;
+		*/// Übergabe der Koordinaten
+		/*flugobjektX = lightPos.x;
 		flugobjektY = lightPos.y;
-		flugobjektZ = lightPos.z;
+		flugobjektZ = lightPos.z;*/
 		
 		//Löschen der Visible  
 		Model = Save;
