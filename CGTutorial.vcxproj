@@ -331,6 +331,40 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="shader.hpp" />
     <ClInclude Include="texture.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="backroundBlock.mtl" />
+    <None Include="backroundBox2.mtl" />
+    <None Include="backroundBox3.mtl" />
+    <None Include="ColorFragmentShader.fragmentshader" />
+    <None Include="CubeFullTexure360.mtl" />
+    <None Include="Felsmauer.mtl" />
+    <None Include="FelsmauerCube.mtl" />
+    <None Include="FelsmauerCubeAlsTon.mtl" />
+    <None Include="FelsmauerCubeAlsTon2.mtl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="auge.bmp" />
+    <Image Include="Berge.bmp" />
+    <Image Include="comicBaum.bmp" />
+    <Image Include="Felsmauer5Groß.bmp" />
+    <Image Include="Felsmauer6Groß.bmp" />
+    <Image Include="Felsmauer7.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="backroundBlock.obj" />
+    <Object Include="backroundBox2.obj" />
+    <Object Include="backroundBox3.obj" />
+    <Object Include="block.obj" />
+    <Object Include="cube.obj" />
+    <Object Include="CubeFullTexure360.obj" />
+    <Object Include="dragon.obj" />
+    <Object Include="Felsmauer.obj" />
+    <Object Include="FelsmauerCube.obj" />
+    <Object Include="FelsmauerCubeAlsTon.obj" />
+    <Object Include="FelsmauerCubeAlsTon2.obj" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
