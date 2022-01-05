@@ -1,3 +1,4 @@
+
 // Include Standardheader, steht bei jedem C/C++-Programm am Anfang
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,11 +14,11 @@ int32_t bitsPerPixel = 0;
 
 
 
-// Include GLEW, GLEW ist ein notwendiges Übel. Der Hintergrund ist, dass OpenGL von Microsoft
-// zwar unterstützt wird, aber nur in einer Uralt-Version. Deshalb beinhaltet die Header-Datei,
-// die vom Betriebssystem zur Verfügung gestellt wird, nur Deklarationen zu den uralten Funktionen,
+// Include GLEW, GLEW ist ein notwendiges Ãœbel. Der Hintergrund ist, dass OpenGL von Microsoft
+// zwar unterstÃ¼tzt wird, aber nur in einer Uralt-Version. Deshalb beinhaltet die Header-Datei,
+// die vom Betriebssystem zur VerfÃ¼gung gestellt wird, nur Deklarationen zu den uralten Funktionen,
 // obwohl der OpenGL-Treiber, und damit die OpenGL-dll die neuesten Funktionen implementiert.
-// Die neueren Funktionen werden deshalb über diese Header-Datei separat zur Verfügung gestellt.
+// Die neueren Funktionen werden deshalb Ã¼ber diese Header-Datei separat zur VerfÃ¼gung gestellt.
 #include <GL/glew.h>
 
 GLuint TextureRasen;
@@ -30,15 +31,15 @@ GLuint TextureComicBaum;
 
 
 
-// Include GLFW, OpenGL definiert betriebssystemunabhängig die graphische Ausgabe. Interaktive 
-// Programme beötigen aber natürlich auch Funktionen für die Eingabe (z. B. Tastatureingaben)
-// Dies geht bei jedem OS (z. B. Windows vs. MacOS/Unix) etwas anders. Um nun generell plattformunabhängig
+// Include GLFW, OpenGL definiert betriebssystemunabhÃ¤ngig die graphische Ausgabe. Interaktive 
+// Programme beÃ¶tigen aber natÃ¼rlich auch Funktionen fÃ¼r die Eingabe (z. B. Tastatureingaben)
+// Dies geht bei jedem OS (z. B. Windows vs. MacOS/Unix) etwas anders. Um nun generell plattformunabhÃ¤ngig
 // zu sein, verwenden wir GLFW, was die gleichen Eingabe-Funktionen auf die Implementierung unterschiedlicher
-// OS abbildet. (Dazu gibt es Alternativen, glut wird z. B. auch häufig verwendet.)
+// OS abbildet. (Dazu gibt es Alternativen, glut wird z. B. auch hÃ¤ufig verwendet.)
 #include <GLFW/glfw3.h>
 
-// Include GLM, GLM definiert für OpenGL-Anwendungen Funktionen der linearen Algebra wie
-// Transformationsmatrizen. Mann könnte GLM auch durch etaws anderes ersetzen oder aber in einem
+// Include GLM, GLM definiert fÃ¼r OpenGL-Anwendungen Funktionen der linearen Algebra wie
+// Transformationsmatrizen. Mann kÃ¶nnte GLM auch durch etaws anderes ersetzen oder aber in einem
 // anderen Kontext verwenden.
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -47,10 +48,10 @@ using namespace glm;
 // In C- und C++-Programmen ist die Reihenfolge der include-Direktiven wichtig.
 // Dateien, die mit Spitzklammern includiert werden, werden in den System-Verzeichnissen
 // gesucht, die mit doppelten Hochkommata im lokalen Projektverzeichnis
-// (wo genau ist in den Projekteinstellungen zu finden und ggf. zu ändern.) 
+// (wo genau ist in den Projekteinstellungen zu finden und ggf. zu Ã¤ndern.) 
 
-// Diese Datei benötigen wir, um die Shader-Programme komfortabel in die Hardware zu laden.
-// (Mit der rechten Mouse-taste können Sie in VS diese Datei öffnen, um nachzuschauen, was dort deklariert wird.)
+// Diese Datei benÃ¶tigen wir, um die Shader-Programme komfortabel in die Hardware zu laden.
+// (Mit der rechten Mouse-taste kÃ¶nnen Sie in VS diese Datei Ã¶ffnen, um nachzuschauen, was dort deklariert wird.)
 #include "shader.hpp"
 
 // Wuerfel und Kugel
@@ -110,7 +111,7 @@ void trim_less() {
 float rotate2 = 0.1;
 void rotate_More() {
 	rotate2 = rotate2 + 0.5;
-		
+
 }
 void rotate_Less() {
 	rotate2 = rotate2 - 0.5;
@@ -156,36 +157,36 @@ float rotate3 = 1;
 
 
 
-// Callback-Mechanismen gibt es in unterschiedlicher Form in allen möglichen Programmiersprachen,
-// sehr häufig in interaktiven graphischen Anwendungen. In der Programmiersprache C werden dazu 
-// Funktionspointer verwendet. Man übergibt einer aufgerufenen Funktion einer Bibliothek einen
-// Zeiger auf eine Funktion, die zurückgerufen werden kann. Die Signatur der Funktion muss dabei
+// Callback-Mechanismen gibt es in unterschiedlicher Form in allen mÃ¶glichen Programmiersprachen,
+// sehr hÃ¤ufig in interaktiven graphischen Anwendungen. In der Programmiersprache C werden dazu 
+// Funktionspointer verwendet. Man Ã¼bergibt einer aufgerufenen Funktion einer Bibliothek einen
+// Zeiger auf eine Funktion, die zurÃ¼ckgerufen werden kann. Die Signatur der Funktion muss dabei
 // passen. Dieser Mechanismus existiert auch in C++ und wird hier verwendet, um eine einfache
-// Fehlerbehandlung durchzuführen. Diese Funktion gibt Fehler aus, die beim Aufruf von OpenGL-Befehlen
+// Fehlerbehandlung durchzufÃ¼hren. Diese Funktion gibt Fehler aus, die beim Aufruf von OpenGL-Befehlen
 // auftreten.
 void error_callback(int error, const char* description)
 {
 	// Mit fputs gibt man hier den String auf den Standarderror-Kanal aus.
-	// In der C-Welt, aus der das hier übernommen ist, sind Strings Felder aus "char"s, die mit 
+	// In der C-Welt, aus der das hier Ã¼bernommen ist, sind Strings Felder aus "char"s, die mit 
 	// dem Wert null terminiert werden.
 	fputs(description, stderr);
 }
 
-// Diese Funktion wird ebenfalls über Funktionspointer der GLFW-Bibliothek übergeben.
+// Diese Funktion wird ebenfalls Ã¼ber Funktionspointer der GLFW-Bibliothek Ã¼bergeben.
 // (Die Signatur ist hier besonders wichtig. Wir sehen, dass hier drei Parameter definiert
-//  werden müssen, die gar nicht verwendet werden.)
-// Generell überlassen wir der GLFW-Bibliothek die Behandlung der Input-Ereignisse (Mouse moved,
+//  werden mÃ¼ssen, die gar nicht verwendet werden.)
+// Generell Ã¼berlassen wir der GLFW-Bibliothek die Behandlung der Input-Ereignisse (Mouse moved,
 // button click, Key pressed, etc.).
-// Durch die Übergabe dieser Funktion können wir Keyboard-Events 
-// abfangen. Mouse-Events z. B. erhalten wir nicht, da wir keinen Callback an GLFW übergeben.
+// Durch die Ãœbergabe dieser Funktion kÃ¶nnen wir Keyboard-Events 
+// abfangen. Mouse-Events z. B. erhalten wir nicht, da wir keinen Callback an GLFW Ã¼bergeben.
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	switch (key)
 	{
-	// Mit rechte Mousetaste -> gehe zu Deklaration finden Sie andere Konstanten für Tasten.
+		// Mit rechte Mousetaste -> gehe zu Deklaration finden Sie andere Konstanten fÃ¼r Tasten.
 	case GLFW_KEY_ESCAPE:
-		// Das Programm wird beendet, wenn BenutzerInnen die Escapetaste betätigen.
-		// Wir könnten hier direkt die C-Funktion "exit" aufrufen, eleganter ist aber, GLFW mitzuteilen
+		// Das Programm wird beendet, wenn BenutzerInnen die Escapetaste betÃ¤tigen.
+		// Wir kÃ¶nnten hier direkt die C-Funktion "exit" aufrufen, eleganter ist aber, GLFW mitzuteilen
 		// dass wir das Fenster schliessen wollen (siehe Schleife unten).
 		glfwSetWindowShouldClose(window, GL_TRUE);
 		break;
@@ -224,7 +225,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		break;
 	case GLFW_KEY_H:
 		setGL_Less();
-		break; 
+		break;
 	case GLFW_KEY_KP_1:
 		rotate_Less();
 		break;
@@ -261,7 +262,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	case GLFW_KEY_K:
 		rotate3 = rotate3 - 1;
 		break;
-	case GLFW_KEY_L :
+	case GLFW_KEY_L:
 		rotate3 = rotate3 + 1;
 		break;
 	default:
@@ -272,25 +273,25 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 // Diese drei Matrizen speichern wir global (Singleton-Muster), damit sie jederzeit modifiziert und
 // an die Grafikkarte geschickt werden koennen. Ihre Bedeutung habe ich in der Vorlesung Geometrische
-// Transformationen erklärt, falls noch nicht geschehen, jetzt anschauen !
+// Transformationen erklÃ¤rt, falls noch nicht geschehen, jetzt anschauen !
 glm::mat4 Projection;
 glm::mat4 View;
 glm::mat4 Model;
-GLuint programID; // OpenGL unterstützt unterschiedliche Shaderprogramme, zwischen denen man
-                  // wechseln kann. Unser Programm wird mit der unsigned-integer-Variable programID
-                  // referenziert.
+GLuint programID; // OpenGL unterstÃ¼tzt unterschiedliche Shaderprogramme, zwischen denen man
+				  // wechseln kann. Unser Programm wird mit der unsigned-integer-Variable programID
+				  // referenziert.
 
 // Ich habe Ihnen hier eine Hilfsfunktion definiert, die wir verwenden, um die Transformationsmatrizen
 // zwischen dem OpenGL-Programm auf der CPU und den Shaderprogrammen in den GPUs zu synchronisieren.
 // (Muss immer aufgerufen werden, bevor wir Geometriedaten in die Pipeline einspeisen.)
 void sendMVP()
 {
-	// Zunächst können wir die drei Matrizen einfach kombinieren, da unser einfachster Shader
-	// wirklich nur eine Transformationsmatrix benötigt, wie in der Vorlesung erklärt.
-	// Später werden wir hier auch die Teilmatrizen an den Shader übermitteln müssen.
-	// Interessant ist hier, dass man in C++ (wie auch in C#) den "*"-Operator überladen kann, so dass
+	// ZunÃ¤chst kÃ¶nnen wir die drei Matrizen einfach kombinieren, da unser einfachster Shader
+	// wirklich nur eine Transformationsmatrix benÃ¶tigt, wie in der Vorlesung erklÃ¤rt.
+	// SpÃ¤ter werden wir hier auch die Teilmatrizen an den Shader Ã¼bermitteln mÃ¼ssen.
+	// Interessant ist hier, dass man in C++ (wie auch in C#) den "*"-Operator Ã¼berladen kann, so dass
 	// man Klassenobjekte miteinander multiplizieren kann (hier Matrizen bzw. "mat4"), 
-	// das ginge in JAVA so natürlich nicht. 
+	// das ginge in JAVA so natÃ¼rlich nicht. 
 	glm::mat4 MVP = Projection * View * Model;
 
 	glUniformMatrix4fv(glGetUniformLocation(programID, "M"), 1, GL_FALSE, &Model[0][0]);
@@ -300,7 +301,7 @@ void sendMVP()
 
 	// "glGetUniformLocation" liefert uns eine Referenz auf eine Variable, die im Shaderprogramm
 	// definiert ist, in diesem Fall heisst die Variable "MVP".
-	// "glUniformMatrix4fv" überträgt Daten, genauer 4x4-Matrizen, aus dem Adressraum unserer CPU
+	// "glUniformMatrix4fv" Ã¼bertrÃ¤gt Daten, genauer 4x4-Matrizen, aus dem Adressraum unserer CPU
 	// (vierter Parameter beim Funktionsaufruf, wir generieren mit "&" hier einen Pointer auf das erste 
 	//  Element, und damit auf das gesamte Feld bzw den Speicherbereich) 
 	// in den Adressraum der GPUs. Beim ersten Parameter 
@@ -318,19 +319,19 @@ void drawGround(Obj3D* obj3D)
 	Model = glm::scale(Model, glm::vec3(5, 0.01, 5));
 	sendMVP();
 	obj3D->display();
-	
+
 	//steine Im Boden
 	float BodenSteineArray1[][2] = { {-12,0},{12,-2}, {-4, 9.5}, {9, 3},{ -8, 9}, {-6, 5.5}, {5, -9}, {9, -11},{ 7, 11}, {-10, 7}, {-3.5,-3.25}, {-2.5,-6.5},{2, 0}, {2.7, 6.3}, {-0 ,-4},  {-8.6, 4.7 }, { 7.4,-7.4 }, { -5.5, 6.5 }, { 0, 3.6 }, { -7.5, -11.5 }, { -4,-2 }, { -8, -5 }, { 5.5, 7 }, { 1.5 , 8.5 } };
 	glBindTexture(GL_TEXTURE_2D, TextureMauer);
-	
+
 	for (int x = 0; x < sizeof(BodenSteineArray1) / sizeof(BodenSteineArray1[0]); x += 1) {
 		Model = Save;
 		Model = glm::scale(Model, glm::vec3(0.2, 0.2, 0.4));
-		Model = glm::translate(Model, glm::vec3(BodenSteineArray1[x][0], -5.9 , BodenSteineArray1[x][1]));
+		Model = glm::translate(Model, glm::vec3(BodenSteineArray1[x][0], -5.9, BodenSteineArray1[x][1]));
 		sendMVP();
 		mauerObj->display();
 	};
-	
+
 	Model = Save;
 }
 void drawZylinder(Obj3D* obj3D)
@@ -342,8 +343,8 @@ void drawZylinder(Obj3D* obj3D)
 	sendMVP();
 	obj3D->display();
 	Model = Save;
-// rechte Seite	
-	
+	// rechte Seite	
+
 	Model = glm::translate(Model, glm::vec3(-4.0, -0.45, 0));
 	Model = glm::scale(Model, glm::vec3(0.5, 1, 1));
 	sendMVP();
@@ -360,7 +361,7 @@ void drawBackRound(Obj3D* obj)
 	sendMVP();
 	obj->display();
 	Model = Save;
-	
+
 	//Links
 	glBindTexture(GL_TEXTURE_2D, TextureBergMitSee);
 	Model = glm::translate(Model, glm::vec3(5.1, 4.5, 0));
@@ -368,10 +369,10 @@ void drawBackRound(Obj3D* obj)
 	sendMVP();
 	obj->display();
 	Model = Save;
-	
+
 	//rechts	
 	glBindTexture(GL_TEXTURE_2D, TextureBergMitSee);
-	Model = glm::translate(Model, glm::vec3(-4.8 , 4.5, 0));
+	Model = glm::translate(Model, glm::vec3(-4.8, 4.5, 0));
 	Model = glm::scale(Model, glm::vec3(0.01, 3, 5.5));
 	sendMVP();
 	obj->display();
@@ -383,10 +384,10 @@ void drawBlock(Obj3D* opj3D, float scX, float scY, float scZ, float trX, float t
 {
 	glm::mat4 Save = Model;
 	glBindTexture(GL_TEXTURE_2D, TextureMauer);
-	Model = glm::translate(Model, glm::vec3(trX, trY , trZ));
+	Model = glm::translate(Model, glm::vec3(trX, trY, trZ));
 	Model = glm::scale(Model, glm::vec3(scX, scY, scZ));
 	sendMVP();
-	opj3D  -> display();
+	opj3D->display();
 	Model = Save;
 }
 
@@ -398,15 +399,15 @@ void drawTeeKanne(Obj3D* obj3D, float trX, float trY, float trZ, float rotateY) 
 	Model = glm::rotate(Model, -90.0f, glm::vec3(1, 0, 0));   // x-Achse
 	Model = glm::scale(Model, glm::vec3(1.0 / 1300.0, 1.0 / 1300.0, 1.0 / 500.0));
 	sendMVP();
-	obj3D -> display();
+	obj3D->display();
 	Model = Save;
 }
 
 void drawSeg(float h)
 {
 	glm::mat4 Save = Model;
-	Model = glm::translate(Model, glm::vec3(0, 0,0.5*h));
-	Model = glm::scale(Model, glm::vec3(0.1, 0.1, h* 0.5 ));
+	Model = glm::translate(Model, glm::vec3(0, 0, 0.5 * h));
+	Model = glm::scale(Model, glm::vec3(0.1, 0.1, h * 0.5));
 	sendMVP();
 	drawSphere(10, 10);
 	Model = Save;
@@ -463,20 +464,22 @@ void enlightenScene()
 
 	// Dir light
 	glUniform3f(glGetUniformLocation(programID, "dirLight_position"), pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
-	glUniform3f(glGetUniformLocation(programID, "dirLight_ambient"),  pointLightColors[0].x, pointLightColors[0].y, pointLightColors[0].z);
+
+	glUniform3f(glGetUniformLocation(programID, "dirLight_ambient"), pointLightColors[0].x, pointLightColors[0].y, pointLightColors[0].z);
 	glUniform3f(glGetUniformLocation(programID, "dirLight_diffuse"), pointLightColors[0].x, pointLightColors[0].y, pointLightColors[0].z);
 	// Point light 1
 	glUniform3f(glGetUniformLocation(programID, "pointLights1_position"), pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z);
-	glUniform3f(glGetUniformLocation(programID, "pointLights1_ambient"),  pointLightColors[1].x, pointLightColors[1].y, pointLightColors[1].z);
-	glUniform3f(glGetUniformLocation(programID, "pointLights1_diffuse"),  pointLightColors[1].x, pointLightColors[1].y, pointLightColors[1].z);
+	glUniform3f(glGetUniformLocation(programID, "pointLights1_ambient"), pointLightColors[1].x, pointLightColors[1].y, pointLightColors[1].z);
+	glUniform3f(glGetUniformLocation(programID, "pointLights1_diffuse"), pointLightColors[1].x, pointLightColors[1].y, pointLightColors[1].z);
 	// Point light 2
-	glUniform3f(glGetUniformLocation(programID, "pointLights2_position"), pointLightPositions[2].x, pointLightPositions[2].y, 	pointLightPositions[2].z);
-	glUniform3f(glGetUniformLocation(programID, "pointLights2_ambient"),  pointLightColors[2].x, pointLightColors[2].y, pointLightColors[2].z); 
-	glUniform3f(glGetUniformLocation(programID, "pointLights2_diffuse"),  pointLightColors[2].x, pointLightColors[2].y, pointLightColors[2].z);
+	glUniform3f(glGetUniformLocation(programID, "pointLights2_position"), pointLightPositions[2].x, pointLightPositions[2].y, pointLightPositions[2].z);
+	glUniform3f(glGetUniformLocation(programID, "pointLights2_ambient"), pointLightColors[2].x, pointLightColors[2].y, pointLightColors[2].z);
+	glUniform3f(glGetUniformLocation(programID, "pointLights2_diffuse"), pointLightColors[2].x, pointLightColors[2].y, pointLightColors[2].z);
+
 }
 
 
-// Einstiegspunkt für C- und C++-Programme (Funktion), Konsolenprogramme könnte hier auch Parameter erwarten
+// Einstiegspunkt fÃ¼r C- und C++-Programme (Funktion), Konsolenprogramme kÃ¶nnte hier auch Parameter erwarten
 int main(void)
 {
 	// Initialisierung der GLFW-Bibliothek
@@ -489,14 +492,14 @@ int main(void)
 	// Fehler werden auf stderr ausgegeben, s. o.
 	glfwSetErrorCallback(error_callback);
 
-	// Öffnen eines Fensters für OpenGL, die letzten beiden Parameter sind hier unwichtig
+	// Ã–ffnen eines Fensters fÃ¼r OpenGL, die letzten beiden Parameter sind hier unwichtig
 	// Diese Funktion darf erst aufgerufen werden, nachdem GLFW initialisiert wurde.
 	// (Ggf. glfwWindowHint vorher aufrufen, um erforderliche Resourcen festzulegen -> MacOSX)
 	GLFWwindow* window = glfwCreateWindow(1280, // Breite
-										  720,  // Hoehe
-										  "Castle Bombing", // Ueberschrift
-										  NULL,  // windowed mode
-										  NULL); // shared window
+		720,  // Hoehe
+		"Castle Bombing", // Ueberschrift
+		NULL,  // windowed mode
+		NULL); // shared window
 
 	if (!window)
 	{
@@ -504,20 +507,20 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 
-	// Wir könnten uns mit glfwCreateWindow auch mehrere Fenster aufmachen...
-	// Spätestens dann wäre klar, dass wir den OpenGL-Befehlen mitteilen müssen, in
-	// welches Fenster sie "malen" sollen. Wir müssen das aber zwingend auch machen,
+	// Wir kÃ¶nnten uns mit glfwCreateWindow auch mehrere Fenster aufmachen...
+	// SpÃ¤testens dann wÃ¤re klar, dass wir den OpenGL-Befehlen mitteilen mÃ¼ssen, in
+	// welches Fenster sie "malen" sollen. Wir mÃ¼ssen das aber zwingend auch machen,
 	// wenn es nur ein Fenster gibt.
 
 	// Bis auf weiteres sollen OpenGL-Befehle in "window" malen.
 	// Ein "Graphic Context" (GC) speichert alle Informationen zur Darstellung, z. B.
 	// die Linienfarbe, die Hintergrundfarbe. Dieses Konzept hat den Vorteil, dass
-	// die Malbefehle selbst weniger Parameter benötigen.
+	// die Malbefehle selbst weniger Parameter benÃ¶tigen.
 	// Erst danach darf man dann OpenGL-Befehle aufrufen !
-    glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(window);
 
 	// Initialisiere GLEW
-	// (GLEW ermöglicht Zugriff auf OpenGL-API > 1.1)
+	// (GLEW ermÃ¶glicht Zugriff auf OpenGL-API > 1.1)
 	glewExperimental = true; // Diese Zeile ist leider notwendig.
 
 	if (glewInit() != GLEW_OK)
@@ -530,14 +533,14 @@ int main(void)
 	glfwSetKeyCallback(window, key_callback);
 
 	// Setzen von Dunkelblau als Hintergrundfarbe (erster OpenGL-Befehl in diesem Programm).
-	// Beim späteren Löschen gibt man die Farbe dann nicht mehr an, sondern liest sie aus dem GC
+	// Beim spÃ¤teren LÃ¶schen gibt man die Farbe dann nicht mehr an, sondern liest sie aus dem GC
 	// Der Wertebereich in OpenGL geht nicht von 0 bis 255, sondern von 0 bis 1, hier sind Werte
 	// fuer R, G und B angegeben, der vierte Wert alpha bzw. Transparenz ist beliebig, da wir keine
 	// Transparenz verwenden. Zu den Farben sei auf die entsprechende Vorlesung verwiesen !
 	glClearColor(0.0f, 0.5f, 0.9f, 0.45f);
 
 	// Kreieren von Shadern aus den angegebenen Dateien, kompilieren und linken und in
-	// die Grafikkarte übertragen.  
+	// die Grafikkarte Ã¼bertragen.  
 	programID = LoadShaders("StandardShading.vertexshader", "StandardShading.fragmentshader");
 
 	// Diesen Shader aktivieren ! (Man kann zwischen Shadern wechseln.) 
@@ -568,7 +571,7 @@ int main(void)
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer); // Kennung erhalten
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer); // Daten zur Kennung definieren
-	// Buffer zugreifbar für die Shader machen
+	// Buffer zugreifbar fÃ¼r die Shader machen
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
 	// Erst nach glEnableVertexAttribArray kann DrawArrays auf die Daten zugreifen...
 	glEnableVertexAttribArray(0); // siehe layout im vertex shader: location = 0 
@@ -578,8 +581,8 @@ int main(void)
 		GL_FALSE, // Fixedpoint data normalisieren ?
 		0, // Eckpunkte direkt hintereinander gespeichert
 		(void*)0); // abweichender Datenanfang ? 
-	
-	GLuint normalbuffer; // Hier alles analog für Normalen in location == 2
+
+	GLuint normalbuffer; // Hier alles analog fÃ¼r Normalen in location == 2
 	glGenBuffers(1, &normalbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
 	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
@@ -587,7 +590,7 @@ int main(void)
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 	// 
-	GLuint uvbuffer; // Hier alles analog für Texturkoordinaten in location == 1 (2 floats u und v!)
+	GLuint uvbuffer; // Hier alles analog fÃ¼r Texturkoordinaten in location == 1 (2 floats u und v!)
 	glGenBuffers(1, &uvbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
 	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
@@ -596,8 +599,8 @@ int main(void)
 
 	// Load the texture
 	TextureRasen = loadBMP_custom("rasen3000x2000.bmp");
-	TextureMauer = loadBMP_custom("Felsmauer5Groß.bmp");
-	TextureMauer2 = loadBMP_custom("Felsmauer6Groß.bmp");
+	TextureMauer = loadBMP_custom("Felsmauer5GroÃŸ.bmp");
+	TextureMauer2 = loadBMP_custom("Felsmauer6GroÃŸ.bmp");
 	TextureMauer3 = loadBMP_custom("Felsmauer7.bmp");
 	TextureBergMitSee = loadBMP_custom("Berge.bmp");
 	TextureAuge = loadBMP_custom("auge.bmp");
@@ -630,16 +633,16 @@ int main(void)
 		{0.1, 0.2, 0.5,   3, -0.0,  0,   1},
 		{0.1, 0.2, 0.5,   3, -0.0,  1,   1},
 		{0.1, 0.2, 0.5,   3, -0.0,  2,   1},
-		{0.5, 0.2, 0.1,	 3.5, -0.8, -2.4,  1},			// 1-3te Schicht quer Links unten rechte Hälfte
+		{0.5, 0.2, 0.1,	 3.5, -0.8, -2.4,  1},			// 1-3te Schicht quer Links unten rechte HÃ¤lfte
 		{0.5, 0.2, 0.1,	 3.5, -0.4, -2.4,  1},
 		{0.5, 0.2, 0.1,	 3.5, -0.0, -2.4,  1},
-		{0.5, 0.2, 0.1,	 4, -0.8, -2.4,  1},			// 1-3te Schicht quer Links unten linke Hälfte
+		{0.5, 0.2, 0.1,	 4, -0.8, -2.4,  1},			// 1-3te Schicht quer Links unten linke HÃ¤lfte
 		{0.5, 0.2, 0.1,	 4, -0.4, -2.4,  1},
 		{0.5, 0.2, 0.1,	 4, -0.0, -2.4,  1},
-		{0.5, 0.2, 0.1,	 3.5, -0.8, 2.4,  1},			// 1-3te Schicht quer Links oben rechte Hälfte
+		{0.5, 0.2, 0.1,	 3.5, -0.8, 2.4,  1},			// 1-3te Schicht quer Links oben rechte HÃ¤lfte
 		{0.5, 0.2, 0.1,	 3.5, -0.4, 2.4,  1},
 		{0.5, 0.2, 0.1,	 3.5, -0.0, 2.4,  1},
-		{0.5, 0.2, 0.1,	 4, -0.8, 2.4,  1},				// 1-3te Schicht quer Links oben linke Hälfte
+		{0.5, 0.2, 0.1,	 4, -0.8, 2.4,  1},				// 1-3te Schicht quer Links oben linke HÃ¤lfte
 		{0.5, 0.2, 0.1,	 4, -0.4, 2.4,  1},
 		{0.5, 0.2, 0.1,	 4, -0.0, 2.4,  1},
 	};
@@ -659,16 +662,16 @@ int main(void)
 			{0.1, 0.2, 0.5,   -3, -0.0,  0,   1},
 			{0.1, 0.2, 0.5,   -3, -0.0,  1,   1},
 			{0.1, 0.2, 0.5,   -3, -0.0,  2,   1},
-			{0.5, 0.2, 0.1,	 -3.5, -0.8, -2.4,  1},			// 1-3te Schicht quer rechts unten rechte Hälfte
+			{0.5, 0.2, 0.1,	 -3.5, -0.8, -2.4,  1},			// 1-3te Schicht quer rechts unten rechte HÃ¤lfte
 			{0.5, 0.2, 0.1,	 -3.5, -0.4, -2.4,  1},
 			{0.5, 0.2, 0.1,	 -3.5, -0.0, -2.4,  1},
-			{0.5, 0.2, 0.1,	 -4, -0.8, -2.4,  1},			// 1-3te Schicht quer rechts unten linke Hälfte
+			{0.5, 0.2, 0.1,	 -4, -0.8, -2.4,  1},			// 1-3te Schicht quer rechts unten linke HÃ¤lfte
 			{0.5, 0.2, 0.1,	 -4, -0.4, -2.4,  1},
 			{0.5, 0.2, 0.1,	 -4, -0.0, -2.4,  1},
-			{0.5, 0.2, 0.1,	 -3.5, -0.8, 2.4,  1},			// 1-3te Schicht quer rechts oben rechte Hälfte
+			{0.5, 0.2, 0.1,	 -3.5, -0.8, 2.4,  1},			// 1-3te Schicht quer rechts oben rechte HÃ¤lfte
 			{0.5, 0.2, 0.1,	 -3.5, -0.4, 2.4,  1},
 			{0.5, 0.2, 0.1,	 -3.5, -0.0, 2.4,  1},
-			{0.5, 0.2, 0.1,	 -4, -0.8, 2.4,  1},				// 1-3te Schicht quer rechts oben linke Hälfte
+			{0.5, 0.2, 0.1,	 -4, -0.8, 2.4,  1},				// 1-3te Schicht quer rechts oben linke HÃ¤lfte
 			{0.5, 0.2, 0.1,	 -4, -0.4, 2.4,  1},
 			{0.5, 0.2, 0.1,	 -4, -0.0, 2.4,  1},
 	};
@@ -677,7 +680,7 @@ int main(void)
 								  {0.2, 0.3, 0.2, 3, -0.25, 2.5, 1},
 								  {0.2, 0.4, 0.2, 4.5, -0.25, -2.5, 1},
 								  {0.2, 0.4, 0.2, 4.5, -0.25, 2.5, 1} };
-	float turmArrayRechts[][7] = {{0.2, 0.3, 0.2,-3, -0.25, -2.5, 1},
+	float turmArrayRechts[][7] = { {0.2, 0.3, 0.2,-3, -0.25, -2.5, 1},
 								  {0.2, 0.3, 0.2, -3, -0.25, 2.5, 1},
 								  {0.2, 0.4, 0.2, -4.5, -0.25, -2.5, 1},
 								  {0.2, 0.4, 0.2, -4.5, -0.25, 2.5, 1} };
@@ -685,28 +688,28 @@ int main(void)
 	// Alles ist vorbereitet, jetzt kann die Eventloop laufen...
 	while (!glfwWindowShouldClose(window))
 	{
-		// Löschen des Bildschirms (COLOR_BUFFER), man kann auch andere Speicher zusätzlich löschen, 
-		// kommt in späteren Übungen noch...
-		// Per Konvention sollte man jedes Bild mit dem Löschen des Bildschirms beginnen, muss man aber nicht...
+		// LÃ¶schen des Bildschirms (COLOR_BUFFER), man kann auch andere Speicher zusÃ¤tzlich lÃ¶schen, 
+		// kommt in spÃ¤teren Ãœbungen noch...
+		// Per Konvention sollte man jedes Bild mit dem LÃ¶schen des Bildschirms beginnen, muss man aber nicht...
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(varGL_DIVERS);
 
 		// Einstellen der Geometrischen Transformationen
 		// Wir verwenden dazu die Funktionen aus glm.h
-		// Projektionsmatrix mit 45Grad horizontalem Öffnungswinkel, 4:3 Seitenverhältnis, 
+		// Projektionsmatrix mit 45Grad horizontalem Ã–ffnungswinkel, 4:3 SeitenverhÃ¤ltnis, 
 		// Frontplane bai 0.1 und Backplane bei 100. (Das sind OpenGL-Einheiten, keine Meter oder der gleichen.)
 		Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 
 		// Viewmatrix, beschreibt wo die Kamera steht, wo sie hinschaut, und wo oben ist. 
-		// Man muss angeben, wo oben ist, da es eine Mehrdeutigkeit gäbe, wenn man nur beschreiben
-		// würde, wo die Kamera steht und wo sie hinschaut. Denken Sie an ein Flugzeug. Die Position 
+		// Man muss angeben, wo oben ist, da es eine Mehrdeutigkeit gÃ¤be, wenn man nur beschreiben
+		// wÃ¼rde, wo die Kamera steht und wo sie hinschaut. Denken Sie an ein Flugzeug. Die Position 
 		// des/r Piloten/in in der Welt ist klar, es ist dann auch klar, wo er/sie hinschaut. Das Flugzeug 
-		// kann sich aber z. B. auf die Seite legen, dann würde der Horizont "kippen". Dieser Aspekt wird
+		// kann sich aber z. B. auf die Seite legen, dann wÃ¼rde der Horizont "kippen". Dieser Aspekt wird
 		// mit dem up-Vektor (hier "oben") gesteuert.
 		View = glm::lookAt(glm::vec3(0, 4, -10), // die Kamera ist bei (0,0,-5), in Weltkoordinaten
-							glm::vec3(0, 0, 0),  // und schaut in den Ursprung
-							glm::vec3(0, 1, 0)); // Oben ist bei (0,1,0), das ist die y-Achse = 1
+			glm::vec3(0, 0, 0),  // und schaut in den Ursprung
+			glm::vec3(0, 1, 0)); // Oben ist bei (0,1,0), das ist die y-Achse = 1
 
 
 // Modelmatrix : Hier auf Einheitsmatrix gesetzt, was bedeutet, dass die Objekte sich im Ursprung
@@ -731,38 +734,37 @@ int main(void)
 		glUniform1i(glGetUniformLocation(programID, "myTextureSampler"), 0);
 
 
-		// Diese Informationen (Projection, View, Model) müssen geeignet der Grafikkarte übermittelt werden,
-		// damit sie beim Zeichnen von Objekten berücksichtigt werden können.
+		// Diese Informationen (Projection, View, Model) mÃ¼ssen geeignet der Grafikkarte Ã¼bermittelt werden,
+		// damit sie beim Zeichnen von Objekten berÃ¼cksichtigt werden kÃ¶nnen.
 		sendMVP();
 
-		// Nachdem der GC in der Grafikkarte aktuell ist, also z. B. auch ein sendMVP ausgeführt wurde,
-		// zeichen wir hier nun einen Würfel. Dazu werden in "drawWireCube" die Eckpunkte zur Grafikkarte 
-		// geschickt. Der gewählte Modus legt fest, wie die Punkte mit Linien verbunden werden.
-		// Das werden wir uns später noch genauer anschauen. (Schauen Sie sich die schwarzen Linien genau an,
-		// und überlegen Sie sich, dass das wirklich ein Würfel ist, der perspektivisch verzerrt ist.)
-		// Die Darstellung nennt man übrigens "im Drahtmodell".
+		// Nachdem der GC in der Grafikkarte aktuell ist, also z. B. auch ein sendMVP ausgefÃ¼hrt wurde,
+		// zeichen wir hier nun einen WÃ¼rfel. Dazu werden in "drawWireCube" die Eckpunkte zur Grafikkarte 
+		// geschickt. Der gewÃ¤hlte Modus legt fest, wie die Punkte mit Linien verbunden werden.
+		// Das werden wir uns spÃ¤ter noch genauer anschauen. (Schauen Sie sich die schwarzen Linien genau an,
+		// und Ã¼berlegen Sie sich, dass das wirklich ein WÃ¼rfel ist, der perspektivisch verzerrt ist.)
+		// Die Darstellung nennt man Ã¼brigens "im Drahtmodell".
 		/* drawCube();
-
 		 sendMVP();*/
 		Model = Save;
-		
 
-		// Grundfläche erstellen
+
+		// GrundflÃ¤che erstellen
 		drawGround(CubeFullTexure360);
-		drawBackRound(CubeFullTexure360);  
-		drawZylinder(zylinderObj); 
+		drawBackRound(CubeFullTexure360);
+		drawZylinder(zylinderObj);
 		drawTeeKanne(kanneObject, 4.0, 0.75, 0, kanneLinksYrotate);
 		drawTeeKanne(kanneObject, -4.0, 0.75, 0, kanneRechtsYrotate);
-		
+
 		//Model = Save;
 		//sendMVP();
 
 		Model = Save;
-		
-		
+
+
 		// mauer mit block Erstellen links ;
 		drawWall(mauerArray, sizeof(mauerArray) / sizeof(mauerArray[0]));
-		
+
 		// mauer mit block Erstellen rechts ;
 		drawWall(mauerArrayRechts, sizeof(mauerArrayRechts) / sizeof(mauerArrayRechts[0]));
 
@@ -773,21 +775,21 @@ int main(void)
 
 		/*glBindVertexArray(VertexArrayIDQuader);
 		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
-		
+
 		sendMVP();*/
 		Model = Save;
-		Model = glm::rotate(Model, rXwert * rotate3,   glm::vec3(1, 0, 0));
-		Model = glm::rotate(Model, rYwert* spin,       glm::vec3(0, 1, 0));
-		Model = glm::rotate(Model, rZwert* roboWinkel, glm::vec3(0, 0, 1));
+		Model = glm::rotate(Model, rXwert * rotate3, glm::vec3(1, 0, 0));
+		Model = glm::rotate(Model, rYwert * spin, glm::vec3(0, 1, 0));
+		Model = glm::rotate(Model, rZwert * roboWinkel, glm::vec3(0, 0, 1));
 		drawSeg(1.5f);
 		Model = glm::translate(Model, glm::vec3(0, 0, 1.5));
-		Model = glm::rotate(Model, rotate2,  glm::vec3(1,0, 0));
+		Model = glm::rotate(Model, rotate2, glm::vec3(1, 0, 0));
 		drawSeg(1.2f);
 		Model = glm::translate(Model, glm::vec3(0, 0, 1.2));
 		Model = glm::rotate(Model, trim, glm::vec3(1, 0, 0));
-		
+
 		drawSeg(0.8f);
-		
+
 		//drawSphere(10, 10);
 		//drawBlock(zylinderObj);
 
@@ -798,37 +800,37 @@ int main(void)
 
 		/*glm::vec4 lightPos = Model * glm::vec4(0.0f, 0.0f, 0.8f, 1.0f);
 		glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPos.x, lightPos.y,lightPos.z);
-		*/// Übergabe der Koordinaten
+		*/// Ãœbergabe der Koordinaten
 		/*flugobjektX = lightPos.x;
 		flugobjektY = lightPos.y;
 		flugobjektZ = lightPos.z;*/
-		
-		//Löschen der Visible  
+
+		//LÃ¶schen der Visible  
 		Model = Save;
 		eraseVisibility(mauerArray, sizeof(mauerArray) / sizeof(mauerArray[0]));
 		eraseVisibility(mauerArrayRechts, sizeof(mauerArrayRechts) / sizeof(mauerArrayRechts[0]));
 		eraseVisibility(turmArrayRechts, sizeof(turmArrayRechts) / sizeof(turmArrayRechts[0]));
 		eraseVisibility(turmArrayLinks, sizeof(turmArrayLinks) / sizeof(turmArrayLinks[0]));
 
-		
-		
-				// Bildende. 
-		// Bilder werden in den Bildspeicher gezeichnet (so schnell wie es geht.). 
-		// Der Bildspeicher wird mit der eingestellten Bildwiederholfrequenz (also z. B. 60Hz)
-		// ausgelesen und auf dem Bildschirm dargestellt. Da beide Frequenzen nicht übereinstimmen, würde
-		// man beim Auslesen auf unfertige Bilder stoßen. Das wäre als Flimmern auf dem Bildschirm zu
-		// erkennen. (War bei älteren Grafikkarten tatsächlich so.)
-		// Dieses Problem vermeidet man, wenn man zwei Bildspeicher benutzt, wobei in einen gerade
-		// gemalt wird, bzw. dort ein neues Bild entsteht, und der andere auf dem Bildschirm ausgegeben wird.
-		// Ist man mit dem Erstellen eines Bildes fertig, tauscht man diese beiden Speicher einfach aus ("swap").
+
+
+		// Bildende. 
+// Bilder werden in den Bildspeicher gezeichnet (so schnell wie es geht.). 
+// Der Bildspeicher wird mit der eingestellten Bildwiederholfrequenz (also z. B. 60Hz)
+// ausgelesen und auf dem Bildschirm dargestellt. Da beide Frequenzen nicht Ã¼bereinstimmen, wÃ¼rde
+// man beim Auslesen auf unfertige Bilder stoÃŸen. Das wÃ¤re als Flimmern auf dem Bildschirm zu
+// erkennen. (War bei Ã¤lteren Grafikkarten tatsÃ¤chlich so.)
+// Dieses Problem vermeidet man, wenn man zwei Bildspeicher benutzt, wobei in einen gerade
+// gemalt wird, bzw. dort ein neues Bild entsteht, und der andere auf dem Bildschirm ausgegeben wird.
+// Ist man mit dem Erstellen eines Bildes fertig, tauscht man diese beiden Speicher einfach aus ("swap").
 		glfwSwapBuffers(window);
 
-		// Hier fordern wir glfw auf, Ereignisse zu behandeln. GLFW könnte hier z. B. feststellen,
-		// das die Mouse bewegt wurde und eine Taste betätigt wurde.
+		// Hier fordern wir glfw auf, Ereignisse zu behandeln. GLFW kÃ¶nnte hier z. B. feststellen,
+		// das die Mouse bewegt wurde und eine Taste betÃ¤tigt wurde.
 		// Da wir zurzeit nur einen "key_callback" installiert haben, wird dann nur genau diese Funktion
 		// aus "glfwPollEvents" heraus aufgerufen.
-        glfwPollEvents();
-	} 
+		glfwPollEvents();
+	}
 
 
 	glDeleteBuffers(1, &normalbuffer);
@@ -836,21 +838,19 @@ int main(void)
 	glDeleteBuffers(1, &vertexbuffer);
 
 	glDeleteBuffers(1, &uvbuffer);
-	
+
 	glDeleteTextures(1, &TextureRasen);
 	glDeleteTextures(1, &TextureBergMitSee);
 	glDeleteTextures(1, &TextureMauer);
 
 
-	// Wenn der Benutzer, das Schliesskreusz oder die Escape-Taste betätigt hat, endet die Schleife und
-	// wir kommen an diese Stelle. Hier können wir aufräumen, und z. B. das Shaderprogramm in der
-	// Grafikkarte löschen. (Das macht zurnot das OS aber auch automatisch.)
+	// Wenn der Benutzer, das Schliesskreusz oder die Escape-Taste betÃ¤tigt hat, endet die Schleife und
+	// wir kommen an diese Stelle. Hier kÃ¶nnen wir aufrÃ¤umen, und z. B. das Shaderprogramm in der
+	// Grafikkarte lÃ¶schen. (Das macht zurnot das OS aber auch automatisch.)
 	glDeleteProgram(programID);
 
-	// Schießen des OpenGL-Fensters und beenden von GLFW.
+	// SchieÃŸen des OpenGL-Fensters und beenden von GLFW.
 	glfwTerminate();
 
-	return 0; // Integer zurückgeben, weil main so definiert ist
+	return 0; // Integer zurÃ¼ckgeben, weil main so definiert ist
 }
-
-
