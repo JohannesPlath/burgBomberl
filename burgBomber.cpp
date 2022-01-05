@@ -1,3 +1,4 @@
+
 // Include Standardheader, steht bei jedem C/C++-Programm am Anfang
 #include <stdio.h>
 #include <stdlib.h>
@@ -110,7 +111,7 @@ void trim_less() {
 float rotate2 = 0.1;
 void rotate_More() {
 	rotate2 = rotate2 + 0.5;
-		
+
 }
 void rotate_Less() {
 	rotate2 = rotate2 - 0.5;
@@ -182,7 +183,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 {
 	switch (key)
 	{
-	// Mit rechte Mousetaste -> gehe zu Deklaration finden Sie andere Konstanten für Tasten.
+		// Mit rechte Mousetaste -> gehe zu Deklaration finden Sie andere Konstanten für Tasten.
 	case GLFW_KEY_ESCAPE:
 		// Das Programm wird beendet, wenn BenutzerInnen die Escapetaste betätigen.
 		// Wir könnten hier direkt die C-Funktion "exit" aufrufen, eleganter ist aber, GLFW mitzuteilen
@@ -224,7 +225,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		break;
 	case GLFW_KEY_H:
 		setGL_Less();
-		break; 
+		break;
 	case GLFW_KEY_KP_1:
 		rotate_Less();
 		break;
@@ -261,7 +262,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	case GLFW_KEY_K:
 		rotate3 = rotate3 - 1;
 		break;
-	case GLFW_KEY_L :
+	case GLFW_KEY_L:
 		rotate3 = rotate3 + 1;
 		break;
 	default:
@@ -277,8 +278,8 @@ glm::mat4 Projection;
 glm::mat4 View;
 glm::mat4 Model;
 GLuint programID; // OpenGL unterstützt unterschiedliche Shaderprogramme, zwischen denen man
-                  // wechseln kann. Unser Programm wird mit der unsigned-integer-Variable programID
-                  // referenziert.
+				  // wechseln kann. Unser Programm wird mit der unsigned-integer-Variable programID
+				  // referenziert.
 
 // Ich habe Ihnen hier eine Hilfsfunktion definiert, die wir verwenden, um die Transformationsmatrizen
 // zwischen dem OpenGL-Programm auf der CPU und den Shaderprogrammen in den GPUs zu synchronisieren.
@@ -318,19 +319,19 @@ void drawGround(Obj3D* obj3D)
 	Model = glm::scale(Model, glm::vec3(5, 0.01, 5));
 	sendMVP();
 	obj3D->display();
-	
+
 	//steine Im Boden
 	float BodenSteineArray1[][2] = { {-12,0},{12,-2}, {-4, 9.5}, {9, 3},{ -8, 9}, {-6, 5.5}, {5, -9}, {9, -11},{ 7, 11}, {-10, 7}, {-3.5,-3.25}, {-2.5,-6.5},{2, 0}, {2.7, 6.3}, {-0 ,-4},  {-8.6, 4.7 }, { 7.4,-7.4 }, { -5.5, 6.5 }, { 0, 3.6 }, { -7.5, -11.5 }, { -4,-2 }, { -8, -5 }, { 5.5, 7 }, { 1.5 , 8.5 } };
 	glBindTexture(GL_TEXTURE_2D, TextureMauer);
-	
+
 	for (int x = 0; x < sizeof(BodenSteineArray1) / sizeof(BodenSteineArray1[0]); x += 1) {
 		Model = Save;
 		Model = glm::scale(Model, glm::vec3(0.2, 0.2, 0.4));
-		Model = glm::translate(Model, glm::vec3(BodenSteineArray1[x][0], -5.9 , BodenSteineArray1[x][1]));
+		Model = glm::translate(Model, glm::vec3(BodenSteineArray1[x][0], -5.9, BodenSteineArray1[x][1]));
 		sendMVP();
 		mauerObj->display();
 	};
-	
+
 	Model = Save;
 }
 void drawZylinder(Obj3D* obj3D)
@@ -342,8 +343,8 @@ void drawZylinder(Obj3D* obj3D)
 	sendMVP();
 	obj3D->display();
 	Model = Save;
-// rechte Seite	
-	
+	// rechte Seite	
+
 	Model = glm::translate(Model, glm::vec3(-4.0, -0.45, 0));
 	Model = glm::scale(Model, glm::vec3(0.5, 1, 1));
 	sendMVP();
@@ -360,7 +361,7 @@ void drawBackRound(Obj3D* obj)
 	sendMVP();
 	obj->display();
 	Model = Save;
-	
+
 	//Links
 	glBindTexture(GL_TEXTURE_2D, TextureBergMitSee);
 	Model = glm::translate(Model, glm::vec3(5.1, 4.5, 0));
@@ -368,10 +369,10 @@ void drawBackRound(Obj3D* obj)
 	sendMVP();
 	obj->display();
 	Model = Save;
-	
+
 	//rechts	
 	glBindTexture(GL_TEXTURE_2D, TextureBergMitSee);
-	Model = glm::translate(Model, glm::vec3(-4.8 , 4.5, 0));
+	Model = glm::translate(Model, glm::vec3(-4.8, 4.5, 0));
 	Model = glm::scale(Model, glm::vec3(0.01, 3, 5.5));
 	sendMVP();
 	obj->display();
@@ -383,10 +384,10 @@ void drawBlock(Obj3D* opj3D, float scX, float scY, float scZ, float trX, float t
 {
 	glm::mat4 Save = Model;
 	glBindTexture(GL_TEXTURE_2D, TextureMauer);
-	Model = glm::translate(Model, glm::vec3(trX, trY , trZ));
+	Model = glm::translate(Model, glm::vec3(trX, trY, trZ));
 	Model = glm::scale(Model, glm::vec3(scX, scY, scZ));
 	sendMVP();
-	opj3D  -> display();
+	opj3D->display();
 	Model = Save;
 }
 
@@ -398,15 +399,15 @@ void drawTeeKanne(Obj3D* obj3D, float trX, float trY, float trZ, float rotateY) 
 	Model = glm::rotate(Model, -90.0f, glm::vec3(1, 0, 0));   // x-Achse
 	Model = glm::scale(Model, glm::vec3(1.0 / 1300.0, 1.0 / 1300.0, 1.0 / 500.0));
 	sendMVP();
-	obj3D -> display();
+	obj3D->display();
 	Model = Save;
 }
 
 void drawSeg(float h)
 {
 	glm::mat4 Save = Model;
-	Model = glm::translate(Model, glm::vec3(0, 0,0.5*h));
-	Model = glm::scale(Model, glm::vec3(0.1, 0.1, h* 0.5 ));
+	Model = glm::translate(Model, glm::vec3(0, 0, 0.5 * h));
+	Model = glm::scale(Model, glm::vec3(0.1, 0.1, h * 0.5));
 	sendMVP();
 	drawSphere(10, 10);
 	Model = Save;
@@ -444,6 +445,38 @@ void drawWall(float  mauerArray[][7], int num) {
 	}
 }
 
+//create multiple light sources
+void enlightenScene()
+{
+	glm::vec3 pointLightColors[] = {
+	glm::vec3(1.0f, 0.0f, 0.0f),
+	glm::vec3(0.0f, 1.0f, 0.0f),
+	glm::vec3(0.0f, 0.0f, 1.0f),
+	glm::vec3(0.4f, 0.4f, 0.4f)
+	};
+
+	glm::vec3 pointLightPositions[] = {
+	glm::vec3(0.0f, 5.0f, 0.0f),
+	glm::vec3(-5.0f, 5.0f, 0.0f),
+	glm::vec3(5.0f, 5.0f, 0.0f),
+	glm::vec3(0.0f, 0.0f, 0.0f)
+	};
+
+	// Dir light
+	glUniform3f(glGetUniformLocation(programID, "dirLight_position"), pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
+	glUniform3f(glGetUniformLocation(programID, "dirLight_ambient"), pointLightColors[0].x, pointLightColors[0].y, pointLightColors[0].z);
+	glUniform3f(glGetUniformLocation(programID, "dirLight_diffuse"), pointLightColors[0].x, pointLightColors[0].y, pointLightColors[0].z);
+	// Point light 1
+	glUniform3f(glGetUniformLocation(programID, "pointLights1_position"), pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z);
+	glUniform3f(glGetUniformLocation(programID, "pointLights1_ambient"), pointLightColors[1].x, pointLightColors[1].y, pointLightColors[1].z);
+	glUniform3f(glGetUniformLocation(programID, "pointLights1_diffuse"), pointLightColors[1].x, pointLightColors[1].y, pointLightColors[1].z);
+	// Point light 2
+	glUniform3f(glGetUniformLocation(programID, "pointLights2_position"), pointLightPositions[2].x, pointLightPositions[2].y, pointLightPositions[2].z);
+	glUniform3f(glGetUniformLocation(programID, "pointLights2_ambient"), pointLightColors[2].x, pointLightColors[2].y, pointLightColors[2].z);
+	glUniform3f(glGetUniformLocation(programID, "pointLights2_diffuse"), pointLightColors[2].x, pointLightColors[2].y, pointLightColors[2].z);
+}
+
+
 // Einstiegspunkt für C- und C++-Programme (Funktion), Konsolenprogramme könnte hier auch Parameter erwarten
 int main(void)
 {
@@ -461,10 +494,10 @@ int main(void)
 	// Diese Funktion darf erst aufgerufen werden, nachdem GLFW initialisiert wurde.
 	// (Ggf. glfwWindowHint vorher aufrufen, um erforderliche Resourcen festzulegen -> MacOSX)
 	GLFWwindow* window = glfwCreateWindow(1280, // Breite
-										  720,  // Hoehe
-										  "Castle Bombing", // Ueberschrift
-										  NULL,  // windowed mode
-										  NULL); // shared window
+		720,  // Hoehe
+		"Castle Bombing", // Ueberschrift
+		NULL,  // windowed mode
+		NULL); // shared window
 
 	if (!window)
 	{
@@ -482,7 +515,7 @@ int main(void)
 	// die Linienfarbe, die Hintergrundfarbe. Dieses Konzept hat den Vorteil, dass
 	// die Malbefehle selbst weniger Parameter benötigen.
 	// Erst danach darf man dann OpenGL-Befehle aufrufen !
-    glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(window);
 
 	// Initialisiere GLEW
 	// (GLEW ermöglicht Zugriff auf OpenGL-API > 1.1)
@@ -546,7 +579,7 @@ int main(void)
 		GL_FALSE, // Fixedpoint data normalisieren ?
 		0, // Eckpunkte direkt hintereinander gespeichert
 		(void*)0); // abweichender Datenanfang ? 
-	
+
 	GLuint normalbuffer; // Hier alles analog für Normalen in location == 2
 	glGenBuffers(1, &normalbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
@@ -645,7 +678,7 @@ int main(void)
 								  {0.2, 0.3, 0.2, 3, -0.25, 2.5, 1},
 								  {0.2, 0.4, 0.2, 4.5, -0.25, -2.5, 1},
 								  {0.2, 0.4, 0.2, 4.5, -0.25, 2.5, 1} };
-	float turmArrayRechts[][7] = {{0.2, 0.3, 0.2,-3, -0.25, -2.5, 1},
+	float turmArrayRechts[][7] = { {0.2, 0.3, 0.2,-3, -0.25, -2.5, 1},
 								  {0.2, 0.3, 0.2, -3, -0.25, 2.5, 1},
 								  {0.2, 0.4, 0.2, -4.5, -0.25, -2.5, 1},
 								  {0.2, 0.4, 0.2, -4.5, -0.25, 2.5, 1} };
@@ -673,8 +706,8 @@ int main(void)
 		// kann sich aber z. B. auf die Seite legen, dann würde der Horizont "kippen". Dieser Aspekt wird
 		// mit dem up-Vektor (hier "oben") gesteuert.
 		View = glm::lookAt(glm::vec3(0, 4, -10), // die Kamera ist bei (0,0,-5), in Weltkoordinaten
-							glm::vec3(0, 0, 0),  // und schaut in den Ursprung
-							glm::vec3(0, 1, 0)); // Oben ist bei (0,1,0), das ist die y-Achse = 1
+			glm::vec3(0, 0, 0),  // und schaut in den Ursprung
+			glm::vec3(0, 1, 0)); // Oben ist bei (0,1,0), das ist die y-Achse = 1
 
 
 // Modelmatrix : Hier auf Einheitsmatrix gesetzt, was bedeutet, dass die Objekte sich im Ursprung
@@ -710,27 +743,26 @@ int main(void)
 		// und überlegen Sie sich, dass das wirklich ein Würfel ist, der perspektivisch verzerrt ist.)
 		// Die Darstellung nennt man übrigens "im Drahtmodell".
 		/* drawCube();
-
 		 sendMVP();*/
 		Model = Save;
-		
+
 
 		// Grundfläche erstellen
 		drawGround(CubeFullTexure360);
-		drawBackRound(CubeFullTexure360);  
-		drawZylinder(zylinderObj); 
+		drawBackRound(CubeFullTexure360);
+		drawZylinder(zylinderObj);
 		drawTeeKanne(kanneObject, 4.0, 0.75, 0, kanneLinksYrotate);
 		drawTeeKanne(kanneObject, -4.0, 0.75, 0, kanneRechtsYrotate);
-		
+
 		//Model = Save;
 		//sendMVP();
 
 		Model = Save;
-		
-		
+
+
 		// mauer mit block Erstellen links ;
 		drawWall(mauerArray, sizeof(mauerArray) / sizeof(mauerArray[0]));
-		
+
 		// mauer mit block Erstellen rechts ;
 		drawWall(mauerArrayRechts, sizeof(mauerArrayRechts) / sizeof(mauerArrayRechts[0]));
 
@@ -741,34 +773,36 @@ int main(void)
 
 		/*glBindVertexArray(VertexArrayIDQuader);
 		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
-		
+
 		sendMVP();*/
 		Model = Save;
-		Model = glm::rotate(Model, rXwert * rotate3,   glm::vec3(1, 0, 0));
-		Model = glm::rotate(Model, rYwert* spin,       glm::vec3(0, 1, 0));
-		Model = glm::rotate(Model, rZwert* roboWinkel, glm::vec3(0, 0, 1));
+		Model = glm::rotate(Model, rXwert * rotate3, glm::vec3(1, 0, 0));
+		Model = glm::rotate(Model, rYwert * spin, glm::vec3(0, 1, 0));
+		Model = glm::rotate(Model, rZwert * roboWinkel, glm::vec3(0, 0, 1));
 		drawSeg(1.5f);
 		Model = glm::translate(Model, glm::vec3(0, 0, 1.5));
-		Model = glm::rotate(Model, rotate2,  glm::vec3(1,0, 0));
+		Model = glm::rotate(Model, rotate2, glm::vec3(1, 0, 0));
 		drawSeg(1.2f);
 		Model = glm::translate(Model, glm::vec3(0, 0, 1.2));
 		Model = glm::rotate(Model, trim, glm::vec3(1, 0, 0));
-		
+
 		drawSeg(0.8f);
-		
+
 		//drawSphere(10, 10);
 		//drawBlock(zylinderObj);
 
 
 		// Licht berechnen:
-		
-		glm::vec4 lightPos = Model * glm::vec4(0.0f, 0.0f, 0.8f, 1.0f);
+		enlightenScene();
+
+
+		/*glm::vec4 lightPos = Model * glm::vec4(0.0f, 0.0f, 0.8f, 1.0f);
 		glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPos.x, lightPos.y,lightPos.z);
-		// Übergabe der Koordinaten
-		flugobjektX = lightPos.x;
+		*/// Übergabe der Koordinaten
+		/*flugobjektX = lightPos.x;
 		flugobjektY = lightPos.y;
-		flugobjektZ = lightPos.z;
-		
+		flugobjektZ = lightPos.z;*/
+
 		//Löschen der Visible  
 		Model = Save;
 		eraseVisibility(mauerArray, sizeof(mauerArray) / sizeof(mauerArray[0]));
@@ -776,25 +810,25 @@ int main(void)
 		eraseVisibility(turmArrayRechts, sizeof(turmArrayRechts) / sizeof(turmArrayRechts[0]));
 		eraseVisibility(turmArrayLinks, sizeof(turmArrayLinks) / sizeof(turmArrayLinks[0]));
 
-		
-		
-				// Bildende. 
-		// Bilder werden in den Bildspeicher gezeichnet (so schnell wie es geht.). 
-		// Der Bildspeicher wird mit der eingestellten Bildwiederholfrequenz (also z. B. 60Hz)
-		// ausgelesen und auf dem Bildschirm dargestellt. Da beide Frequenzen nicht übereinstimmen, würde
-		// man beim Auslesen auf unfertige Bilder stoßen. Das wäre als Flimmern auf dem Bildschirm zu
-		// erkennen. (War bei älteren Grafikkarten tatsächlich so.)
-		// Dieses Problem vermeidet man, wenn man zwei Bildspeicher benutzt, wobei in einen gerade
-		// gemalt wird, bzw. dort ein neues Bild entsteht, und der andere auf dem Bildschirm ausgegeben wird.
-		// Ist man mit dem Erstellen eines Bildes fertig, tauscht man diese beiden Speicher einfach aus ("swap").
+
+
+		// Bildende. 
+// Bilder werden in den Bildspeicher gezeichnet (so schnell wie es geht.). 
+// Der Bildspeicher wird mit der eingestellten Bildwiederholfrequenz (also z. B. 60Hz)
+// ausgelesen und auf dem Bildschirm dargestellt. Da beide Frequenzen nicht übereinstimmen, würde
+// man beim Auslesen auf unfertige Bilder stoßen. Das wäre als Flimmern auf dem Bildschirm zu
+// erkennen. (War bei älteren Grafikkarten tatsächlich so.)
+// Dieses Problem vermeidet man, wenn man zwei Bildspeicher benutzt, wobei in einen gerade
+// gemalt wird, bzw. dort ein neues Bild entsteht, und der andere auf dem Bildschirm ausgegeben wird.
+// Ist man mit dem Erstellen eines Bildes fertig, tauscht man diese beiden Speicher einfach aus ("swap").
 		glfwSwapBuffers(window);
 
 		// Hier fordern wir glfw auf, Ereignisse zu behandeln. GLFW könnte hier z. B. feststellen,
 		// das die Mouse bewegt wurde und eine Taste betätigt wurde.
 		// Da wir zurzeit nur einen "key_callback" installiert haben, wird dann nur genau diese Funktion
 		// aus "glfwPollEvents" heraus aufgerufen.
-        glfwPollEvents();
-	} 
+		glfwPollEvents();
+	}
 
 
 	glDeleteBuffers(1, &normalbuffer);
@@ -802,7 +836,7 @@ int main(void)
 	glDeleteBuffers(1, &vertexbuffer);
 
 	glDeleteBuffers(1, &uvbuffer);
-	
+
 	glDeleteTextures(1, &TextureRasen);
 	glDeleteTextures(1, &TextureBergMitSee);
 	glDeleteTextures(1, &TextureMauer);
@@ -818,5 +852,3 @@ int main(void)
 
 	return 0; // Integer zurückgeben, weil main so definiert ist
 }
-
-
