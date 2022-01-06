@@ -72,10 +72,10 @@ Obj3D* kanneObject = NULL;
 
 
 // globala variablen
-float flugobjektX;
+float flugobjektX;			// koordinaten für Flugobjekt
 float flugobjektY;
 float flugobjektZ;
-
+bool sp1;					// flag für Spieler
 
 float winkel = 0;
 void addWinkel(float w) {
@@ -265,6 +265,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	case GLFW_KEY_L:
 		rotate3 = rotate3 + 1;
 		break;
+	case GLFW_KEY_1:
+		sp1 = true;
+		break;
+	case GLFW_KEY_2:
+		sp1 = false;
+		break;
 	default:
 		break;
 	}
@@ -321,13 +327,13 @@ void drawGround(Obj3D* obj3D)
 	obj3D->display();
 
 	//steine Im Boden
-	float BodenSteineArray1[][2] = { {-12,0},{12,-2}, {-4, 9.5}, {9, 3},{ -8, 9}, {-6, 5.5}, {5, -9}, {9, -11},{ 7, 11}, {-10, 7}, {-3.5,-3.25}, {-2.5,-6.5},{2, 0}, {2.7, 6.3}, {-0 ,-4},  {-8.6, 4.7 }, { 7.4,-7.4 }, { -5.5, 6.5 }, { 0, 3.6 }, { -7.5, -11.5 }, { -4,-2 }, { -8, -5 }, { 5.5, 7 }, { 1.5 , 8.5 } };
+	float BodenSteineArray1[][3] = { {-12, 5.8, 0},{12, 5.79,-2}, {-4, 5.84, 9.5}, {9, 5.95, 3},{ -8, 5.99, 9}, {-6, 5.9, 5.5}, {5, 5.68, -9}, {9, 5.605, -11},{ 7, 5.87, 11}, {-10, 5.65, 7}, {-3.5, 5.75,-3.25}, {-2.5, 5.895,-6.5},{2, 5.95, 0}, {2.7, 5.85, 6.3}, {-0 , 5.795, -4},  {-8.6, 5.8, 4.7 }, { 7.4, 5.75,-7.4 }, { -5.5, 5.665, 6.5 }, { 0, 5.99, 3.6 }, { -7.5, 5.95, -11.5 }, { -4, 5.9, -2 }, { -8, 5.55, -5 }, { 5.5, 5.6, 7 }, { 1.5, 5.55 , 8.5 } };
 	glBindTexture(GL_TEXTURE_2D, TextureMauer);
 
 	for (int x = 0; x < sizeof(BodenSteineArray1) / sizeof(BodenSteineArray1[0]); x += 1) {
 		Model = Save;
 		Model = glm::scale(Model, glm::vec3(0.2, 0.2, 0.4));
-		Model = glm::translate(Model, glm::vec3(BodenSteineArray1[x][0], -5.9, BodenSteineArray1[x][1]));
+		Model = glm::translate(Model, glm::vec3(BodenSteineArray1[x][0], -BodenSteineArray1[x][1], BodenSteineArray1[x][2]));
 		sendMVP();
 		mauerObj->display();
 	};
@@ -446,19 +452,19 @@ void drawWall(float  mauerArray[][7], int num) {
 }
 
 //create multiple light sources
-void enlightenScene()
+void enlightenScene(float sp1, float sp2)
 {
 	glm::vec3 pointLightColors[] = {
-	glm::vec3(1.0f, 0.0f, 0.0f),
-	glm::vec3(0.0f, 1.0f, 0.0f),
-	glm::vec3(0.0f, 0.0f, 1.0f),
+	glm::vec3(1.0f, 1.0f, 1.0f),
+	glm::vec3(sp1, sp2, 0.0f),
+	glm::vec3(sp2, sp1, .0f),
 	glm::vec3(0.4f, 0.4f, 0.4f)
 	};
 
 	glm::vec3 pointLightPositions[] = {
 	glm::vec3(0.0f, 5.0f, 0.0f),
-	glm::vec3(-5.0f, 5.0f, 0.0f),
-	glm::vec3(5.0f, 5.0f, 0.0f),
+	glm::vec3(-4.5f, 4.5f, 0.0f),
+	glm::vec3(4.5f, 4.5f, 0.0f),
 	glm::vec3(0.0f, 0.0f, 0.0f)
 	};
 
@@ -793,8 +799,12 @@ int main(void)
 
 
 		// Licht berechnen:
-		enlightenScene();
-
+		if (sp1) {
+			enlightenScene(0, 1);
+		}
+		else {
+			enlightenScene(1, 0);
+		}
 
 		/*glm::vec4 lightPos = Model * glm::vec4(0.0f, 0.0f, 0.8f, 1.0f);
 		glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPos.x, lightPos.y,lightPos.z);
