@@ -23,11 +23,11 @@ int32_t bitsPerPixel = 0;
 
 GLuint TextureRasen;
 GLuint TextureMauer;
-GLuint TextureMauer2;
+//GLuint TextureMauer2;
 GLuint TextureMauer3;
 GLuint TextureBergMitSee;
 GLuint TextureAuge;
-GLuint TextureComicBaum;
+//GLuint TextureComicBaum;
 
 
 
@@ -72,9 +72,12 @@ Obj3D* kanneObject = NULL;
 
 
 // globala variablen
-float flugobjektX;
+float flugobjektX;			// koordinaten f�r Flugobjekt
 float flugobjektY;
 float flugobjektZ;
+bool sp1;					// flag f�r Spieler
+float tefferanzahlLinks;
+float tefferanzahRechts;
 
 
 float winkel = 0;
@@ -103,27 +106,27 @@ void setGL_Less() {
 
 float trim = 0.1;
 void trim_more() {
-	trim = trim + 0.5;
+	trim = trim + 0.2;
 }
 void trim_less() {
-	trim = trim - 0.5;
+	trim = trim - 0.2;
 }
 float rotate2 = 0.1;
 void rotate_More() {
-	rotate2 = rotate2 + 0.5;
+	rotate2 = rotate2 + 0.2;
 
 }
 void rotate_Less() {
-	rotate2 = rotate2 - 0.5;
+	rotate2 = rotate2 - 0.2;
 
 }
 float spin = 0.1;
 void spin_More() {
-	spin = spin + 0.5;
+	spin = spin + 0.2;
 
 }
 void spin_Less() {
-	spin = spin - 0.5;
+	spin = spin - 0.2;
 
 }
 float rXwert = 0.1;
@@ -254,16 +257,22 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		rZWert_More();
 		break;
 	case GLFW_KEY_O:
-		roboWinkel = roboWinkel + 1;
+		roboWinkel = roboWinkel + 0.5;
 		break;
 	case GLFW_KEY_P:
-		roboWinkel = roboWinkel - 1;
+		roboWinkel = roboWinkel - 0.5;
 		break;
 	case GLFW_KEY_K:
-		rotate3 = rotate3 - 1;
+		rotate3 = rotate3 - 0.2;
 		break;
 	case GLFW_KEY_L:
-		rotate3 = rotate3 + 1;
+		rotate3 = rotate3 + 0.2;
+		break;
+	case GLFW_KEY_1:
+		sp1 = true;
+		break;
+	case GLFW_KEY_2:
+		sp1 = false;
 		break;
 	default:
 		break;
@@ -321,13 +330,13 @@ void drawGround(Obj3D* obj3D)
 	obj3D->display();
 
 	//steine Im Boden
-	float BodenSteineArray1[][2] = { {-12,0},{12,-2}, {-4, 9.5}, {9, 3},{ -8, 9}, {-6, 5.5}, {5, -9}, {9, -11},{ 7, 11}, {-10, 7}, {-3.5,-3.25}, {-2.5,-6.5},{2, 0}, {2.7, 6.3}, {-0 ,-4},  {-8.6, 4.7 }, { 7.4,-7.4 }, { -5.5, 6.5 }, { 0, 3.6 }, { -7.5, -11.5 }, { -4,-2 }, { -8, -5 }, { 5.5, 7 }, { 1.5 , 8.5 } };
+	float BodenSteineArray1[][3] = { {-12, 5.8, 0},{12, 5.79,-2}, {-4, 5.84, 9.5}, {9, 5.95, 3},{ -8, 5.99, 9}, {-6, 5.9, 5.5}, {5, 5.68, -9}, {9, 5.605, -11},{ 7, 5.87, 11}, {-10, 5.65, 7}, {-3.5, 5.75,-3.25}, {-2.5, 5.895,-6.5},{2, 5.95, 0}, {2.7, 5.85, 6.3}, {-0 , 5.795, -4},  {-8.6, 5.8, 4.7 }, { 7.4, 5.75,-7.4 }, { -5.5, 5.665, 6.5 }, { 0, 5.99, 3.6 }, { -7.5, 5.95, -11.5 }, { -4, 5.9, -2 }, { -8, 5.55, -5 }, { 5.5, 5.6, 7 }, { 1.5, 5.55 , 8.5 } };
 	glBindTexture(GL_TEXTURE_2D, TextureMauer);
 
 	for (int x = 0; x < sizeof(BodenSteineArray1) / sizeof(BodenSteineArray1[0]); x += 1) {
 		Model = Save;
 		Model = glm::scale(Model, glm::vec3(0.2, 0.2, 0.4));
-		Model = glm::translate(Model, glm::vec3(BodenSteineArray1[x][0], -5.9, BodenSteineArray1[x][1]));
+		Model = glm::translate(Model, glm::vec3(BodenSteineArray1[x][0], -BodenSteineArray1[x][1], BodenSteineArray1[x][2]));
 		sendMVP();
 		mauerObj->display();
 	};
@@ -343,8 +352,8 @@ void drawZylinder(Obj3D* obj3D)
 	sendMVP();
 	obj3D->display();
 	Model = Save;
-	// rechte Seite	
 
+	// rechte Seite	
 	Model = glm::translate(Model, glm::vec3(-4.0, -0.45, 0));
 	Model = glm::scale(Model, glm::vec3(0.5, 1, 1));
 	sendMVP();
@@ -379,6 +388,23 @@ void drawBackRound(Obj3D* obj)
 	Model = Save;
 }
 
+void drawCollisionCount(Obj3D* opj3D, float scX, float scY, float scZ, float trX, float trY, float trZ)
+{
+	glm::mat4 Save = Model;
+	glBindTexture(GL_TEXTURE_2D, TextureBergMitSee);
+	Model = glm::translate(Model, glm::vec3(trX, trY, trZ));
+	Model = glm::scale(Model, glm::vec3( 1, scY, scZ)); // scale x fest
+	sendMVP();
+	opj3D->display();
+	Model = Save;
+	
+	glBindTexture(GL_TEXTURE_2D, TextureAuge);
+	Model = glm::translate(Model, glm::vec3(trX, trY -0.1 , trZ - 0.1));
+	Model = glm::scale(Model, glm::vec3(scX, scY * 0.6, scZ )); // scale x variable
+	sendMVP();
+	opj3D->display();
+	Model = Save;
+}
 
 void drawBlock(Obj3D* opj3D, float scX, float scY, float scZ, float trX, float trY, float trZ)
 {
@@ -445,20 +471,39 @@ void drawWall(float  mauerArray[][7], int num) {
 	}
 }
 
+//berechnen der anteiligen Treffer
+float countOneInArrayAtPosSix(float array1[][7], int arrayLength) {
+	float countedOne = 0;
+	for (int x = 0; x < arrayLength; x += 1) {
+		if (array1[x][6] == 1) {
+			countedOne++;
+		}
+	}
+	return countedOne;
+}
+
+float getVisibleCount(float array1[][7], int groesseMauerArray, float array2[][7], int groesseTurmArray) {
+	float anzahlGesammt = groesseTurmArray + groesseMauerArray;
+	float visibleWall = countOneInArrayAtPosSix(array1, groesseMauerArray);
+	float visibleTower = countOneInArrayAtPosSix(array2, groesseTurmArray);
+		return ((visibleWall + visibleTower) / anzahlGesammt);
+}
+
+
 //create multiple light sources
-void enlightenScene()
+void enlightenScene(float sp1, float sp2)
 {
 	glm::vec3 pointLightColors[] = {
-	glm::vec3(1.0f, 0.0f, 0.0f),
-	glm::vec3(0.0f, 1.0f, 0.0f),
-	glm::vec3(0.0f, 0.0f, 1.0f),
+	glm::vec3(1.0f, 1.0f, 1.0f),
+	glm::vec3(sp1, sp2, 0.0f),
+	glm::vec3(sp2, sp1, .0f),
 	glm::vec3(0.4f, 0.4f, 0.4f)
 	};
 
 	glm::vec3 pointLightPositions[] = {
 	glm::vec3(0.0f, 5.0f, 0.0f),
-	glm::vec3(-5.0f, 5.0f, 0.0f),
-	glm::vec3(5.0f, 5.0f, 0.0f),
+	glm::vec3(-4.5f, 5.f - sp1/2, 0.0f),
+	glm::vec3(4.5f,  5.f - sp1/2, 0.0f),
 	glm::vec3(0.0f, 0.0f, 0.0f)
 	};
 
@@ -496,10 +541,10 @@ int main(void)
 	// Diese Funktion darf erst aufgerufen werden, nachdem GLFW initialisiert wurde.
 	// (Ggf. glfwWindowHint vorher aufrufen, um erforderliche Resourcen festzulegen -> MacOSX)
 	GLFWwindow* window = glfwCreateWindow(1280, // Breite
-		720,  // Hoehe
-		"Castle Bombing", // Ueberschrift
-		NULL,  // windowed mode
-		NULL); // shared window
+											720,  // Hoehe
+											"Castle Bombing", // Ueberschrift
+											NULL,  // windowed mode
+											NULL); // shared window
 
 	if (!window)
 	{
@@ -599,12 +644,14 @@ int main(void)
 
 	// Load the texture
 	TextureRasen = loadBMP_custom("rasen3000x2000.bmp");
+
 	TextureMauer = loadBMP_custom("Felsmauer5Groß.bmp");
 	TextureMauer2 = loadBMP_custom("Felsmauer6Groß.bmp");
+
 	TextureMauer3 = loadBMP_custom("Felsmauer7.bmp");
 	TextureBergMitSee = loadBMP_custom("Berge.bmp");
 	TextureAuge = loadBMP_custom("auge.bmp");
-	TextureComicBaum = loadBMP_custom("comicBaum.bmp");
+	//TextureComicBaum = loadBMP_custom("comicBaum.bmp");
 
 	//GLuint TextureMandrill = loadBMP_custom("mandrill.bmp");
 
@@ -777,6 +824,8 @@ int main(void)
 		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 
 		sendMVP();*/
+		
+		// RoboArm...
 		Model = Save;
 		Model = glm::rotate(Model, rXwert * rotate3, glm::vec3(1, 0, 0));
 		Model = glm::rotate(Model, rYwert * spin, glm::vec3(0, 1, 0));
@@ -787,23 +836,42 @@ int main(void)
 		drawSeg(1.2f);
 		Model = glm::translate(Model, glm::vec3(0, 0, 1.2));
 		Model = glm::rotate(Model, trim, glm::vec3(1, 0, 0));
-
 		drawSeg(0.8f);
 
+		Model = Save;
+
+		// trefferrueckmeldung
+		tefferanzahlLinks = getVisibleCount(mauerArray, sizeof(mauerArray) / sizeof(mauerArray[0]), turmArrayLinks, sizeof(turmArrayLinks) / sizeof(turmArrayLinks[0]));
+		tefferanzahRechts = getVisibleCount(mauerArrayRechts, sizeof(mauerArrayRechts) / sizeof(mauerArrayRechts[0]), turmArrayRechts, sizeof(turmArrayRechts) / sizeof(turmArrayRechts[0]));
+
+		// Anzeige Erstellen
+			// links
+		drawCollisionCount(CubeFullTexure360, tefferanzahlLinks, 0.2, 0.2, 4, 3, 4.5);
+				// rechts
+		drawCollisionCount(CubeFullTexure360, tefferanzahRechts, 0.2, 0.2, -4, 3, 4.5);
+
+				
 		//drawSphere(10, 10);
-		//drawBlock(zylinderObj);
+		// Testobjekt f�r flacher Zylinder
+		drawBlock(zylinderObj, 0.4, 0.4, 0.4, roboWinkel, rotate2, spin );
 
 
 		// Licht berechnen:
-		enlightenScene();
-
+		if (sp1) {
+			enlightenScene(0, 1);
+		}
+		else {
+			enlightenScene(1, 0);
+		}
 
 		/*glm::vec4 lightPos = Model * glm::vec4(0.0f, 0.0f, 0.8f, 1.0f);
 		glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPos.x, lightPos.y,lightPos.z);
-		*/// Übergabe der Koordinaten
-		/*flugobjektX = lightPos.x;
-		flugobjektY = lightPos.y;
-		flugobjektZ = lightPos.z;*/
+
+		*/// �bergabe der Koordinaten
+		flugobjektX = roboWinkel;
+		flugobjektY = rotate2;
+		flugobjektZ = spin;
+
 
 		//Löschen der Visible  
 		Model = Save;
