@@ -99,5 +99,37 @@ main ()
     }
     
 }
-   
+ Tr.xyz * Roty * Rotkorr * Teekanne
+
+// Startpunkt der Kugel bei der Tuelle einer teekanee zu jeder Zeit und fuer beide Teekannen.
+Tr.xyz * Roty * Rotkorr * Tülle.xyz
+
+TrScheibe * 000
+
+Tr.xyz * Roty * Rotkorr * Tülle.xyz = TrScheibe * 000
+
+Tr.xyz^-1  * Tr.xyz * Roty * Rotkorr * Tülle.xyz 
+= Tr.xyz^-1  * TrScheibe * 000
+
+(Roty * Rotkorr) * Tülle.xyz  = Tr.xyz^-1  * TrScheibe * 000
+
+(Roty * Rotkorr) ^-1 * (Roty * Rotkorr) * Tülle.xyz
+= (Roty * Rotkorr) ^-1 * Tr.xyz^-1  * TrScheibe * 000
+
+Tülle.xyz = (Roty * Rotkorr) ^-1 * Tr.xyz^-1  * TrScheibe * 000
+
+Tülle.xyz = (Roty * Rotkorr) ^-1 * -Tr.xyz * TrScheibe * 000
+
+-----------------------------------
+
+glm::mat4 t = Tr.xyz * Roty * Rotkorr; // code anders
+
+glm::mat4  tInvert = t.invert();
+
+// Einmalig zum Test
+glm::vec3 tTuelle = tInvert * tScheibe;
+
+
+
+
    

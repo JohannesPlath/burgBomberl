@@ -27,8 +27,12 @@ GLuint TextureMauer;
 GLuint TextureMauer3;
 GLuint TextureBergMitSee;
 GLuint TextureAuge;
-//GLuint TextureComicBaum;
 
+
+// Textur fuer AnzeigeTafel 
+GLuint TextureAnzeige;
+//GLuint TextureFuerKanne;
+GLuint TextureabstrakteForm;
 
 
 // Include GLFW, OpenGL definiert betriebssystemunabhängig die graphische Ausgabe. Interaktive 
@@ -156,7 +160,14 @@ void rZWert_less() {
 }
 float roboWinkel = 1;
 float rotate3 = 1;
-
+void changeUser() {
+	if (sp1) {
+		sp1 = false;
+	}
+	else {
+		sp1 = true;
+	}
+}
 
 
 
@@ -264,15 +275,22 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		break;
 	case GLFW_KEY_K:
 		rotate3 = rotate3 - 0.2;
+		std::cout << " Rotate3: " << rotate3;
 		break;
 	case GLFW_KEY_L:
 		rotate3 = rotate3 + 0.2;
 		break;
 	case GLFW_KEY_1:
-		sp1 = true;
+		std::cout << "  sp1: " << sp1;
+		if (sp1) {
+			sp1 = false;
+		}
+		else {
+			sp1 = true;
+		}
 		break;
 	case GLFW_KEY_2:
-		sp1 = false;
+		;
 		break;
 	default:
 		break;
@@ -391,16 +409,16 @@ void drawBackRound(Obj3D* obj)
 void drawCollisionCount(Obj3D* opj3D, float scX, float scY, float scZ, float trX, float trY, float trZ)
 {
 	glm::mat4 Save = Model;
-	glBindTexture(GL_TEXTURE_2D, TextureBergMitSee);
-	Model = glm::translate(Model, glm::vec3(trX, trY, trZ));
+	glBindTexture(GL_TEXTURE_2D, TextureAnzeige);
+	Model = glm::translate(Model, glm::vec3(trX, trY, trZ  ));
 	Model = glm::scale(Model, glm::vec3( 1, scY, scZ)); // scale x fest
 	sendMVP();
 	opj3D->display();
 	Model = Save;
 	
-	glBindTexture(GL_TEXTURE_2D, TextureAuge);
-	Model = glm::translate(Model, glm::vec3(trX, trY -0.1 , trZ - 0.1));
-	Model = glm::scale(Model, glm::vec3(scX, scY * 0.6, scZ )); // scale x variable
+	glBindTexture(GL_TEXTURE_2D, TextureMauer);
+	Model = glm::translate(Model, glm::vec3(trX, trY  , trZ -0.01 ));
+	Model = glm::scale(Model, glm::vec3(scX, scY , scZ )); // scale x variable
 	sendMVP();
 	opj3D->display();
 	Model = Save;
@@ -417,17 +435,6 @@ void drawBlock(Obj3D* opj3D, float scX, float scY, float scZ, float trX, float t
 	Model = Save;
 }
 
-void drawTeeKanne(Obj3D* obj3D, float trX, float trY, float trZ, float rotateY) {
-	glm::mat4 Save = Model;
-	glBindTexture(GL_TEXTURE_2D, TextureAuge);
-	Model = glm::translate(Model, glm::vec3(trX, trY, trZ));
-	Model = glm::rotate(Model, rotateY, glm::vec3(0, 1, 0));	 //y-achse
-	Model = glm::rotate(Model, -90.0f, glm::vec3(1, 0, 0));   // x-Achse
-	Model = glm::scale(Model, glm::vec3(1.0 / 1300.0, 1.0 / 1300.0, 1.0 / 500.0));
-	sendMVP();
-	obj3D->display();
-	Model = Save;
-}
 
 void drawSeg(float h)
 {
@@ -438,6 +445,34 @@ void drawSeg(float h)
 	drawSphere(10, 10);
 	Model = Save;
 }
+
+
+void drawTeeKanne(Obj3D* obj3D, float trX, float trY, float trZ, float rotateY) {
+	glm::mat4 Save = Model;
+	glBindTexture(GL_TEXTURE_2D, TextureabstrakteForm);
+	Model = glm::translate(Model, glm::vec3(trX, trY, trZ));
+	Model = glm::rotate(Model, rotateY, glm::vec3(0, 1, 0));	 //y-achse
+	Model = glm::rotate(Model, -90.0f, glm::vec3(1, 0, 0));   // x-Achse
+	Model = glm::scale(Model, glm::vec3(1.0 / 1300.0, 1.0 / 1300.0, 1.0 / 500.0));
+	sendMVP();
+	obj3D->display();
+	/*Model = glm::translate(Model, glm::vec3(0, 0, 1.5));
+	*/
+	Model = glm::scale(Model, glm::vec3(1300 , 1300,  500));
+	Model = glm::rotate(Model, 0.1f * -280, glm::vec3(1, 0, 0));                  // Ansatzpunkt um Schuss abzufeuern 
+	Model = glm::rotate(Model, rYwert * spin + 90, glm::vec3(0, 1, 0));
+	Model = glm::rotate(Model, rZwert * roboWinkel, glm::vec3(0, 0, 1));
+	drawSeg(1.0f);
+	/*Model = glm::translate(Model, glm::vec3(0, 0, 1.5));
+	Model = glm::rotate(Model, rotate2, glm::vec3(1, 0, 0));
+	drawSeg(1.2f);
+	Model = glm::translate(Model, glm::vec3(0, 0, 1.2));
+	Model = glm::rotate(Model, trim, glm::vec3(1, 0, 0));
+	drawSeg(0.8f);*/
+	Model = Save;
+}
+
+
 
 
 void eraseVisibility(float array[][7], int num) {
@@ -488,6 +523,7 @@ float getVisibleCount(float array1[][7], int groesseMauerArray, float array2[][7
 	float visibleTower = countOneInArrayAtPosSix(array2, groesseTurmArray);
 		return ((visibleWall + visibleTower) / anzahlGesammt);
 }
+
 
 
 //create multiple light sources
@@ -651,6 +687,9 @@ int main(void)
 	TextureMauer3 = loadBMP_custom("Felsmauer7.bmp");
 	TextureBergMitSee = loadBMP_custom("Berge.bmp");
 	TextureAuge = loadBMP_custom("auge.bmp");
+	TextureabstrakteForm = loadBMP_custom("abstrakteFormen2.bmp");
+	TextureAnzeige = loadBMP_custom("AnzeigeTextur.bmp");
+	
 	//TextureComicBaum = loadBMP_custom("comicBaum.bmp");
 
 	//GLuint TextureMandrill = loadBMP_custom("mandrill.bmp");
@@ -825,18 +864,18 @@ int main(void)
 
 		sendMVP();*/
 		
-		// RoboArm...
-		Model = Save;
-		Model = glm::rotate(Model, rXwert * rotate3, glm::vec3(1, 0, 0));
-		Model = glm::rotate(Model, rYwert * spin, glm::vec3(0, 1, 0));
-		Model = glm::rotate(Model, rZwert * roboWinkel, glm::vec3(0, 0, 1));
-		drawSeg(1.5f);
-		Model = glm::translate(Model, glm::vec3(0, 0, 1.5));
-		Model = glm::rotate(Model, rotate2, glm::vec3(1, 0, 0));
-		drawSeg(1.2f);
-		Model = glm::translate(Model, glm::vec3(0, 0, 1.2));
-		Model = glm::rotate(Model, trim, glm::vec3(1, 0, 0));
-		drawSeg(0.8f);
+		//// RoboArm...
+		//Model = Save;
+		//Model = glm::rotate(Model, rXwert * rotate3, glm::vec3(1, 0, 0));
+		//Model = glm::rotate(Model, rYwert * spin, glm::vec3(0, 1, 0));
+		//Model = glm::rotate(Model, rZwert * roboWinkel, glm::vec3(0, 0, 1));
+		//drawSeg(1.5f);
+		//Model = glm::translate(Model, glm::vec3(0, 0, 1.5));
+		//Model = glm::rotate(Model, rotate2, glm::vec3(1, 0, 0));
+		//drawSeg(1.2f);
+		//Model = glm::translate(Model, glm::vec3(0, 0, 1.2));
+		//Model = glm::rotate(Model, trim, glm::vec3(1, 0, 0));
+		//drawSeg(0.8f);
 
 		Model = Save;
 
@@ -869,6 +908,7 @@ int main(void)
 
 		*/// �bergabe der Koordinaten
 		flugobjektX = roboWinkel;
+		
 		flugobjektY = rotate2;
 		flugobjektZ = spin;
 
